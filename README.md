@@ -2,20 +2,14 @@
 
 ## Project Overview
 
-The Obsidian Chain Plugin is a comprehensive journaling system for Obsidian, enhancing its markdown-based structure with advanced features for a robust and flexible journaling experience.
+The Obsidian Chain Plugin is a simple journaling system for Obsidian, enhancing its markdown-based structure with basic features for a streamlined journaling experience.
 
-## Key Features
+## Key Features (MVP)
 
-1. Enhanced Markdown Editor
-2. Hierarchical Tag System
-3. Advanced Search Functionality
-4. Calendar View
-5. Collaborative Features
-6. Data Analysis and Insights
-7. Export and Backup Options
-8. Custom Metadata Fields
-9. Media Attachments Support
-10. Customizable Templates
+1. Create and open dated journal entries
+2. Basic customizable entry template
+3. Quick access via ribbon icon and command palette
+4. Simple settings for journal folder location
 
 ## Current Implementation
 
@@ -27,10 +21,8 @@ The Obsidian Chain Plugin is a comprehensive journaling system for Obsidian, enh
 ## Technical Implementation
 
 -   **Plugin Structure**: Utilizes Obsidian's plugin API, implemented in TypeScript
--   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files with YAML frontmatter
--   **User Interface**: Custom views using Obsidian's UI components, including a sidebar for quick access
--   **Performance**: Efficient indexing and virtual rendering for large datasets
--   **Security**: Utilizes Obsidian's encryption features with additional measures for sensitive data
+-   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files
+-   **User Interface**: Custom views using Obsidian's UI components, including a ribbon icon for quick access
 
 ## Project Structure
 
@@ -39,19 +31,12 @@ obsidian-chain-plugin/
 │ ├── main.ts
 │ ├── types.ts
 │ ├── constants.ts
-│ ├── services/
-│ │ ├── eventBus.ts
-│ │ └── logger.ts
 │ ├── managers/
 │ │ ├── journalManager.ts
 │ │ ├── settingsManager.ts
 │ │ └── uiManager.ts
 │ └── utils/
 │ └── dateUtils.ts
-├── styles/
-│ └── styles.css
-├── tests/
-│ └── (test files)
 ├── manifest.json
 ├── package.json
 └── README.md
@@ -64,14 +49,13 @@ obsidian-chain-plugin/
 4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations
 5. **Constants and Types** (`src/constants.ts`, `src/types.ts`): Define shared values and types
 6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions
-7. **Logging and Events** (`src/services/logger.ts`, `src/services/eventBus.ts`): Manage logging and inter-component communication
 
 ## Next Steps
 
-1. Implement tag system and advanced search
-2. Develop calendar view for entry navigation
-3. Add data analysis and insights features
-4. Implement media attachments and gallery view
+1. Refine and optimize existing features
+2. Improve error handling and user feedback
+3. Enhance template customization options
+4. Add basic search functionality for journal entries
 
 ## Installation and Usage
 
