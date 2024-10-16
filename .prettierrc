@@ -1,0 +1,19 @@
+{
+	"tabWidth": 4,
+	"useTabs": true,
+	"singleQuote": false,
+	"trailingComma": "es5",
+	"printWidth": 80,
+	"semi": true,
+	"bracketSpacing": true,
+	"arrowParens": "always",
+	"endOfLine": "lf",
+	"overrides": [
+		{
+			"files": ["README.md"],
+			"options": {
+				"proseWrap": "preserve"
+			}
+		}
+	]
+}
