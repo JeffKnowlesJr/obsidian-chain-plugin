@@ -186,3 +186,34 @@ Best practices for architecting an Obsidian plugin:
 12. Use async/await for asynchronous operations to improve readability and error handling.
 
 By following these practices and modularizing your code, you'll create a more maintainable, scalable, and robust Obsidian plugin.
+
+---
+
+obsidian-chain-plugin/
+├── src/
+│ ├── main.ts
+│ ├── types.ts
+│ ├── constants.ts
+│ ├── services/
+│ │ ├── eventBus.ts
+│ │ └── logger.ts
+│ ├── managers/
+│ │ ├── journalManager.ts
+│ │ ├── settingsManager.ts
+│ │ └── uiManager.ts
+│ └── utils/
+│ └── dateUtils.ts
+├── styles/
+│ └── styles.css
+├── tests/
+│ └── (test files)
+├── .eslintrc
+├── .eslintignore
+├── .gitignore
+├── .npmrc
+├── manifest.json
+├── package.json
+├── tsconfig.json
+├── esbuild.config.mjs
+├── version-bump.mjs
+└── README.md

@@ -1,7 +1,8 @@
 // main.ts
-import { JournalManager } from "./handlers/journalManager";
-import { SettingsManager } from "./handlers/settingsManager";
-import { UIManager } from "./handlers/uiManager";
+import { JournalManager } from "./managers/journalManager";
+import { SettingsManager } from "./managers/settingsManager";
+import { UIManager } from "./managers/uiManager";
+import { Plugin } from "obsidian";
 
 export default class ChainPlugin extends Plugin {
 	journalManager: JournalManager;
