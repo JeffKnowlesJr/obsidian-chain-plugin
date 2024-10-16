@@ -7,7 +7,7 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 ## Key Features
 
 1. Create and open dated journal entries within a structured yearly and monthly folder system
-2. Customizable entry template
+2. Customizable entry templates for daily and monthly entries
 3. Quick access via ribbon icon and command palette
 4. Future entry creation with automatic folder structure generation
 5. Monthly List, Log, and Tracker files
@@ -15,11 +15,12 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 ## Current Implementation
 
 -   Create and open dated journal entries in the format "YYYY-MM-DD Day.md"
--   Customizable journal folder structure and entry template
+-   Customizable journal folder structure and entry templates
 -   Quick access via ribbon icon and command palette
 -   Settings management for user preferences
 -   Automatic creation of yearly and monthly folders
 -   Generation of monthly List, Log, and Tracker files
+-   Future entry creation with date picker functionality
 
 ## Technical Implementation
 
@@ -48,18 +49,18 @@ obsidian-chain-plugin/
 
 1. **Main Entry Point** (`src/main.ts`): Initializes plugin components and manages lifecycle
 2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration
-3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including the future entry date picker
+3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including the future entry creation
 4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations and folder structure creation
 5. **Constants and Types** (`src/constants.ts`, `src/types.ts`): Define shared values and types
 6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions for date handling and folder structure generation
 
 ## Next Steps
 
-1. Implement future entry creation with date picker
-2. Add automatic generation of monthly List, Log, and Tracker files
-3. Enhance folder structure creation logic
-4. Improve error handling and user feedback
-5. Add basic search functionality for journal entries
+1. Enhance the automatic generation of monthly List, Log, and Tracker files
+2. Improve folder structure creation logic
+3. Enhance error handling and user feedback
+4. Add basic search functionality for journal entries
+5. Implement additional customization options for templates and folder structure
 
 ## Installation and Usage
 

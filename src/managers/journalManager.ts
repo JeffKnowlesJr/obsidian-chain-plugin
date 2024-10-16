@@ -102,9 +102,9 @@ export class JournalManager {
 	}
 
 	private getDefaultTemplate(date: Date): string {
-		const template = this.settingsManager.getSetting(
-			SETTINGS.DEFAULT_TEMPLATE
-		);
+		const template =
+			this.settingsManager.getSetting(SETTINGS.DEFAULT_TEMPLATE) ||
+			"# Journal Entry for {date}";
 		return template.replace("{date}", formatDate(date));
 	}
 	// Other journal-related methods

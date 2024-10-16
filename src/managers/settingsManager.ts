@@ -49,8 +49,8 @@ export class SettingsManager {
 		}
 	}
 
-	getSetting(key: keyof typeof SETTINGS) {
-		return this.settings[key];
+	getSetting(key: string): string {
+		return this.settings[key] || "";
 	}
 
 	setSetting(key: keyof typeof SETTINGS, value: string) {
