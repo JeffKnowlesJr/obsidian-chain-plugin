@@ -13,12 +13,3 @@ export class Logger {
 		console.error(`[ChainPlugin] Error: ${error.message}`);
 	}
 }
-
-// Use in other modules
-import { Logger } from "./logger";
-
-try {
-	// Some operation
-} catch (error) {
-	Logger.error(error);
-}

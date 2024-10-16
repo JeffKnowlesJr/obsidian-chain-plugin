@@ -7,7 +7,7 @@ uiManager.ts: Manages the user interface for the Chain Plugin
 
 import { Notice, addIcon, App, PluginSettingTab, Setting } from "obsidian";
 import ChainPlugin from "../main";
-import { ICON_DATA } from "../constants";
+import { ICON_DATA, COMMANDS, SETTINGS } from "../constants";
 
 export class UIManager {
 	constructor(private plugin: ChainPlugin) {}
@@ -15,20 +15,18 @@ export class UIManager {
 	addRibbonIcon() {
 		addIcon("chain-journal", ICON_DATA);
 
-		const ribbonIconEl = this.plugin.addRibbonIcon(
+		this.plugin.addRibbonIcon(
 			"chain-journal",
 			"Create Journal Entry",
 			(evt: MouseEvent) => {
 				this.plugin.journalManager.createJournalEntry();
 			}
 		);
-
-		ribbonIconEl.addClass("chain-journal-ribbon-class");
 	}
 
 	addCommands() {
 		this.plugin.addCommand({
-			id: "create-journal-entry",
+			id: COMMANDS.CREATE_ENTRY,
 			name: "Create Journal Entry",
 			callback: () => {
 				this.plugin.journalManager.createJournalEntry();
@@ -36,7 +34,7 @@ export class UIManager {
 		});
 
 		this.plugin.addCommand({
-			id: "open-today-entry",
+			id: COMMANDS.OPEN_TODAY,
 			name: "Open Today's Entry",
 			callback: () => {
 				this.plugin.journalManager.openTodayEntry();
@@ -60,6 +58,11 @@ class ChainPluginSettingTab extends PluginSettingTab {
 		let { containerEl } = this;
 		containerEl.empty();
 
+		this.addJournalFolderSetting(containerEl);
+		this.addDefaultTemplateSetting(containerEl);
+	}
+
+	private addJournalFolderSetting(containerEl: HTMLElement) {
 		new Setting(containerEl)
 			.setName("Journal folder")
 			.setDesc("Folder where journal entries will be saved")
@@ -67,16 +70,20 @@ class ChainPluginSettingTab extends PluginSettingTab {
 				text
 					.setPlaceholder("Journal")
 					.setValue(
-						this.plugin.settingsManager.getSetting("journalFolder")
+						this.plugin.settingsManager.getSetting(
+							SETTINGS.JOURNAL_FOLDER
+						)
 					)
 					.onChange(async (value) => {
 						this.plugin.settingsManager.setSetting(
-							"journalFolder",
+							SETTINGS.JOURNAL_FOLDER,
 							value
 						);
 					})
 			);
+	}
 
+	private addDefaultTemplateSetting(containerEl: HTMLElement) {
 		new Setting(containerEl)
 			.setName("Default template")
 			.setDesc(
@@ -87,12 +94,12 @@ class ChainPluginSettingTab extends PluginSettingTab {
 					.setPlaceholder("# Journal Entry for {date}")
 					.setValue(
 						this.plugin.settingsManager.getSetting(
-							"defaultTemplate"
+							SETTINGS.DEFAULT_TEMPLATE
 						)
 					)
 					.onChange(async (value) => {
 						this.plugin.settingsManager.setSetting(
-							"defaultTemplate",
+							SETTINGS.DEFAULT_TEMPLATE,
 							value
 						);
 					})

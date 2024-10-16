@@ -6,9 +6,11 @@ journalManager.ts: Manages journal entries
 - Applies user-defined templates to new entries
 */
 
-import { App, TFile, Vault } from "obsidian";
+import { App, TFile, Vault, Notice } from "obsidian";
 import { SettingsManager } from "./settingsManager";
 import { formatDate } from "../utils/dateUtils";
+import { Logger } from "../services/logger";
+import { SETTINGS } from "../constants";
 
 export class JournalManager {
 	constructor(private app: App, private settingsManager: SettingsManager) {}
@@ -16,17 +18,27 @@ export class JournalManager {
 	async createJournalEntry() {
 		const date = new Date();
 		const fileName = `${formatDate(date)}.md`;
-		const folderPath = this.settingsManager.getSetting("journalFolder");
+		const folderPath = this.settingsManager.getSetting(
+			SETTINGS.JOURNAL_FOLDER
+		);
 		const filePath = `${folderPath}/${fileName}`;
 
 		try {
+			// Ensure the folder exists
+			if (!(await this.app.vault.adapter.exists(folderPath))) {
+				await this.app.vault.createFolder(folderPath);
+			}
+
 			const file = await this.app.vault.create(
 				filePath,
 				this.getDefaultTemplate(date)
 			);
 			await this.app.workspace.activeLeaf.openFile(file);
 		} catch (error) {
-			console.error("Error creating journal entry:", error);
+			Logger.error(error as Error);
+			new Notice(
+				"Failed to create journal entry. Check the console for details."
+			);
 		}
 	}
 

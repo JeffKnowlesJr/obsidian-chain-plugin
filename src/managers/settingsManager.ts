@@ -1,5 +1,7 @@
 // settingsManager.ts
 import { Plugin } from "obsidian";
+import { SETTINGS } from "../constants";
+import { Logger } from "../services/logger";
 
 /*
 settingsManager.ts: Manages plugin settings
@@ -9,13 +11,13 @@ settingsManager.ts: Manages plugin settings
 */
 
 interface ChainPluginSettings {
-	journalFolder: string;
-	defaultTemplate: string;
+	[SETTINGS.JOURNAL_FOLDER]: string;
+	[SETTINGS.DEFAULT_TEMPLATE]: string;
 }
 
 const DEFAULT_SETTINGS: ChainPluginSettings = {
-	journalFolder: "Journal",
-	defaultTemplate:
+	[SETTINGS.JOURNAL_FOLDER]: "Journal",
+	[SETTINGS.DEFAULT_TEMPLATE]:
 		"# Journal Entry for {date}\n\n## Today's Goals\n\n## Notes\n\n## Reflections\n",
 };
 
@@ -27,22 +29,31 @@ export class SettingsManager {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.plugin.loadData()
-		);
+		try {
+			const loadedData = await this.plugin.loadData();
+			this.settings = {
+				...DEFAULT_SETTINGS,
+				...loadedData,
+			};
+		} catch (error) {
+			Logger.error(error as Error);
+			this.settings = DEFAULT_SETTINGS;
+		}
 	}
 
 	async saveSettings() {
-		await this.plugin.saveData(this.settings);
+		try {
+			await this.plugin.saveData(this.settings);
+		} catch (error) {
+			Logger.error(error as Error);
+		}
 	}
 
-	getSetting(key: keyof ChainPluginSettings) {
+	getSetting(key: keyof typeof SETTINGS) {
 		return this.settings[key];
 	}
 
-	setSetting(key: keyof ChainPluginSettings, value: string) {
+	setSetting(key: keyof typeof SETTINGS, value: string) {
 		this.settings[key] = value;
 		this.saveSettings();
 	}
