@@ -6,8 +6,9 @@ journalManager.ts: Manages journal entries
 - Applies user-defined templates to new entries
 */
 
-import { App, TFile, Vault, Notice } from "obsidian";
+import { App, TFile, Notice } from "obsidian";
 import { SettingsManager } from "./settingsManager";
+import { FileSystemManager } from "./fileSystemManager";
 import {
 	formatDate,
 	getYearFolderName,
@@ -18,64 +19,92 @@ import { Logger } from "../services/logger";
 import { SETTINGS, MONTHLY_FILES, TEMPLATES } from "../constants";
 
 export class JournalManager {
-	constructor(private app: App, private settingsManager: SettingsManager) {}
+	constructor(
+		private app: App,
+		private settingsManager: SettingsManager,
+		private fileSystemManager: FileSystemManager
+	) {}
 
 	async createJournalEntry(date: Date = new Date()) {
 		const yearFolder = getYearFolderName(date);
 		const monthFolder = getMonthFolderName(date);
 		const fileName = getDayFileName(date);
-		const folderPath = `${this.settingsManager.getSetting(
+		const journalFolder = this.settingsManager.getSetting(
 			SETTINGS.JOURNAL_FOLDER
-		)}/${yearFolder}/${monthFolder}`;
+		);
+		const folderPath = `${journalFolder}/${yearFolder}/${monthFolder}`;
 		const filePath = `${folderPath}/${fileName}`;
-
 		try {
-			await this.ensureFolderStructure(folderPath);
+			await this.fileSystemManager.ensureFolderStructure(folderPath);
 			await this.createMonthlyFiles(date, folderPath);
-
-			let file = this.app.vault.getAbstractFileByPath(filePath);
-			if (!(file instanceof TFile)) {
-				// File doesn't exist, create it
-				file = await this.app.vault.create(
+			const fileExists = await this.fileSystemManager.fileExists(
+				filePath
+			);
+			if (!fileExists) {
+				const file = await this.fileSystemManager.createFile(
 					filePath,
 					this.getDefaultTemplate(date)
 				);
+				await this.fileSystemManager.openFileInMainPane(file);
+			} else {
+				const file = this.app.vault.getAbstractFileByPath(
+					filePath
+				) as TFile;
+				await this.fileSystemManager.openFileInMainPane(file);
 			}
-			// Open the file, whether it existed before or was just created
-			await this.app.workspace.activeLeaf.openFile(file as TFile);
 		} catch (error) {
-			Logger.error(error as Error);
+			Logger.error(
+				"Failed to create or open journal entry",
+				error as Error
+			);
 			new Notice(
 				"Failed to create or open journal entry. Check the console for details."
 			);
 		}
 	}
-
 	async openTodayEntry() {
 		const date = new Date();
 		const yearFolder = getYearFolderName(date);
 		const monthFolder = getMonthFolderName(date);
 		const fileName = getDayFileName(date);
-		const folderPath = `${this.settingsManager.getSetting(
+		const journalFolder = this.settingsManager.getSetting(
 			SETTINGS.JOURNAL_FOLDER
-		)}/${yearFolder}/${monthFolder}`;
+		);
+		const folderPath = `${journalFolder}/${yearFolder}/${monthFolder}`;
 		const filePath = `${folderPath}/${fileName}`;
-
 		const file = this.app.vault.getAbstractFileByPath(filePath);
 		if (file instanceof TFile) {
-			await this.app.workspace.activeLeaf.openFile(file);
+			await this.fileSystemManager.openFileInMainPane(file);
 		} else {
 			await this.createJournalEntry(date);
 		}
 	}
 
 	private async ensureFolderStructure(folderPath: string) {
-		const folders = folderPath.split("/");
+		const folders = folderPath
+			.split("/")
+			.filter((folder) => folder.length > 0);
 		let currentPath = "";
+
 		for (const folder of folders) {
 			currentPath += folder + "/";
-			if (!(await this.app.vault.adapter.exists(currentPath))) {
-				await this.app.vault.createFolder(currentPath);
+			try {
+				const folderExists = await this.app.vault.adapter.exists(
+					currentPath
+				);
+				if (!folderExists) {
+					await this.app.vault.createFolder(currentPath);
+				}
+			} catch (error) {
+				Logger.error(
+					`Failed to create folder: ${currentPath}`,
+					error as Error
+				);
+				throw new Error(
+					`Failed to create folder structure: ${
+						(error as Error).message
+					}`
+				);
 			}
 		}
 	}

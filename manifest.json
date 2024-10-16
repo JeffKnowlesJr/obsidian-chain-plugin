@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-chain-plugin",
 	"name": "Obsidian Chain Plugin",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"minAppVersion": "0.15.0",
 	"description": "A comprehensive journaling system with advanced features for Obsidian.",
 	"author": "Jeff's Link",

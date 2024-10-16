@@ -9,20 +9,25 @@ main.ts: Entry point for the Chain Plugin
 import { JournalManager } from "./managers/journalManager";
 import { SettingsManager } from "./managers/settingsManager";
 import { UIManager } from "./managers/uiManager";
+import { FileSystemManager } from "./managers/fileSystemManager";
 import { Plugin } from "obsidian";
 
 export default class ChainPlugin extends Plugin {
 	journalManager: JournalManager;
 	settingsManager: SettingsManager;
 	uiManager: UIManager;
+	fileSystemManager: FileSystemManager;
 
 	async onload() {
 		this.settingsManager = new SettingsManager(this);
 		await this.settingsManager.loadSettings();
 
+		this.fileSystemManager = new FileSystemManager(this.app);
+
 		this.journalManager = new JournalManager(
 			this.app,
-			this.settingsManager
+			this.settingsManager,
+			this.fileSystemManager
 		);
 		this.uiManager = new UIManager(this);
 		this.uiManager.addRibbonIcon();

@@ -59,8 +59,8 @@ obsidian-chain-plugin/
 1. Enhance the automatic generation of monthly List, Log, and Tracker files
 2. Improve folder structure creation logic
 3. Enhance error handling and user feedback
-4. Add basic search functionality for journal entries
-5. Implement additional customization options for templates and folder structure
+4. Implement additional customization options for templates and folder structure
+5. Add integration with Obsidian's existing search functionality for easier journal entry retrieval
 
 ## Installation and Usage
 
