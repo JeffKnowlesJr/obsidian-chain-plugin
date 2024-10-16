@@ -13,10 +13,8 @@ export function getYearFolderName(date: Date): string {
 }
 
 export function getMonthFolderName(date: Date): string {
-	const year = date.getFullYear();
 	const month = date.toLocaleString("default", { month: "long" });
-	const monthNumber = (date.getMonth() + 1).toString().padStart(2, "0");
-	return `${year}-${monthNumber} ${month}`;
+	return `${month}`;
 }
 
 export function getDayFileName(date: Date): string {
