@@ -23,14 +23,6 @@ export default class ChainPlugin extends Plugin {
 		console.log("Chain Plugin is loading...");
 		Logger.log("Chain Plugin onload method called");
 
-		if (!this.app.internalPlugins.plugins["daily-notes"]) {
-			console.log("Daily Notes plugin is not enabled");
-			new Notice(
-				"The Daily Notes core plugin is required for the Chain Plugin to work properly. Please enable it in the core plugins settings."
-			);
-			return;
-		}
-
 		this.settingsManager = new SettingsManager(this);
 		await this.settingsManager.loadSettings();
 
@@ -41,11 +33,108 @@ export default class ChainPlugin extends Plugin {
 			this.settingsManager,
 			this.fileSystemManager
 		);
+
+		// Check for Daily Notes plugin
+		const dailyNotesPlugin =
+			this.app.internalPlugins.plugins["daily-notes"];
+		if (!dailyNotesPlugin) {
+			console.warn(
+				"Daily Notes plugin is not enabled. Some features may not work as expected."
+			);
+			new Notice(
+				"The Daily Notes core plugin is recommended for the Chain Plugin to work properly. Please enable it in the core plugins settings."
+			);
+		} else if (dailyNotesPlugin.enabled) {
+			// Update Daily Notes plugin settings
+			try {
+				const dailyNotesInstance = dailyNotesPlugin.instance;
+				if (dailyNotesInstance && dailyNotesInstance.options) {
+					const oldDateFormat =
+						dailyNotesInstance.options.format || "YYYY-MM-DD";
+					const oldNewFileLocation =
+						dailyNotesInstance.options.folder || "";
+
+					const newDateFormat =
+						this.settingsManager.getSetting("dateFormat") ||
+						oldDateFormat;
+					const newFileLocation =
+						this.settingsManager.getSetting("newFileLocation") ||
+						oldNewFileLocation;
+
+					console.log(
+						"Checking if Daily Notes plugin settings need updating..."
+					);
+					console.log(
+						`Old date format: ${oldDateFormat}, New date format: ${newDateFormat}`
+					);
+					console.log(
+						`Old file location: ${oldNewFileLocation}, New file location: ${newFileLocation}`
+					);
+					if (
+						newDateFormat !== oldDateFormat ||
+						newFileLocation !== oldNewFileLocation
+					) {
+						console.log(
+							"Settings differ, updating Daily Notes plugin options..."
+						);
+						dailyNotesInstance.options.format = newDateFormat;
+						dailyNotesInstance.options.folder = newFileLocation;
+
+						console.log(
+							"Saving updated Daily Notes plugin options..."
+						);
+						await dailyNotesPlugin.saveData(
+							dailyNotesInstance.options
+						);
+
+						console.log(
+							"Daily Notes plugin settings updated successfully:"
+						);
+						console.log(
+							`Date format: ${oldDateFormat} -> ${newDateFormat}`
+						);
+						console.log(
+							`New file location: ${oldNewFileLocation} -> ${newFileLocation}`
+						);
+						Logger.log(
+							"Daily Notes plugin settings updated successfully"
+						);
+					} else {
+						console.log("Daily Notes plugin settings unchanged");
+					}
+				} else {
+					console.warn(
+						"Daily Notes plugin instance or options not found."
+					);
+					Logger.warn(
+						"Daily Notes plugin instance or options not found."
+					);
+				}
+			} catch (error) {
+				console.error(
+					"Failed to update Daily Notes plugin settings:",
+					error
+				);
+				Logger.error(
+					"Failed to update Daily Notes plugin settings: " + error
+				);
+				console.log(
+					"Stack trace:",
+					error instanceof Error
+						? error.stack
+						: "No stack trace available"
+				);
+			}
+		}
+
 		this.uiManager = new UIManager(this);
 		this.uiManager.initialize();
 
-		console.log("Chain Plugin loaded successfully");
-		Logger.log("Chain Plugin loaded successfully");
+		if (this.settingsManager.getSetting("openDailyNoteOnStartup")) {
+			this.journalManager.createOrUpdateDailyNote();
+			console.log("Chain Plugin loaded successfully");
+			Logger.log("Chain Plugin loaded successfully");
+		}
 	}
 
 	onunload() {

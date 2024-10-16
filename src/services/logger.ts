@@ -12,4 +12,8 @@ export class Logger {
 	static error(error: Error) {
 		console.error(`[ChainPlugin] Error: ${error.message}`);
 	}
+
+	static warn(message: string) {
+		console.warn(`[ChainPlugin] ${message}`);
+	}
 }

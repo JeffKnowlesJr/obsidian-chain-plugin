@@ -15,7 +15,7 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 
 ## Current Implementation
 
--   Create and open dated journal entries in the format "YYYY-MM-DD Day.md"
+-   Create and open dated journal entries in the format "YYYY-MM-DD dddd.md"
 -   Customizable journal folder structure and entry templates
 -   Quick access via ribbon icons and command palette
 -   Settings management for user preferences

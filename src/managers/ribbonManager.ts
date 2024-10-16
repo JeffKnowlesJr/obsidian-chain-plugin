@@ -36,6 +36,7 @@ export class RibbonManager {
 	}
 
 	private reloadPlugin() {
+		console.clear();
 		(this.plugin.app as any).plugins.disablePlugin("obsidian-chain-plugin");
 		setTimeout(() => {
 			(this.plugin.app as any).plugins.enablePlugin(

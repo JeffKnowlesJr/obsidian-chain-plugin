@@ -47,24 +47,22 @@ export const TEMPLATES = {
 };
 
 interface ChainPluginSettings {
-	[SETTINGS.JOURNAL_FOLDER]: string;
-	[SETTINGS.DEFAULT_TEMPLATE]: string;
-	[TEMPLATES.DAILY]: string;
-	[TEMPLATES.MONTHLY_LIST]: string;
-	[TEMPLATES.MONTHLY_LOG]: string;
-	[TEMPLATES.MONTHLY_TRACKER]: string;
+	journalFolder: string;
+	defaultTemplate: string;
+	dailyNotesFolderOverride: string;
+	dateFormat: string;
+	newFileLocation: string;
+	templateFileLocation: string;
+	openDailyNoteOnStartup: boolean;
 }
 
 const DEFAULT_SETTINGS: ChainPluginSettings = {
-	[SETTINGS.JOURNAL_FOLDER]: "Journal",
-	[SETTINGS.DEFAULT_TEMPLATE]:
-		"# Journal Entry for {date}\n\n## Today's Goals\n\n## Notes\n\n## Reflections\n",
-	[TEMPLATES.DAILY]:
-		"# Daily Entry - {date}\n\n## Tasks\n- [ ] \n\n## Notes\n\n## Reflection\n",
-	[TEMPLATES.MONTHLY_LIST]:
-		"# {month} List\n\n## Goals\n- [ ] \n\n## Projects\n- \n\n## Ideas\n- ",
-	[TEMPLATES.MONTHLY_LOG]:
-		"# {month} Log\n\n| Date | Event |\n|------|-------|\n| ",
-	[TEMPLATES.MONTHLY_TRACKER]:
-		"# {month} Tracker\n\n| Date | Habit 1 | Habit 2 | Habit 3 |\n|------|---------|---------|---------|\n| ",
+	journalFolder: "Journal",
+	defaultTemplate:
+		"## Log\n\n### Ideas\n- \n### To Do\n- [ ] \n### Contacts\n- [ ] \n### Events\n- \n\n****\n## Routine Checklist\n\n- [ ] **Daily**\n    - [ ] Morning",
+	dailyNotesFolderOverride: "",
+	dateFormat: "YYYY-MM-DD dddd",
+	newFileLocation: "",
+	templateFileLocation: "",
+	openDailyNoteOnStartup: false,
 };
