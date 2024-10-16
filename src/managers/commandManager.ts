@@ -1,6 +1,7 @@
 import ChainPlugin from "../main";
 import { COMMANDS } from "../constants";
 import { FutureEntryModal } from "./futureEntryModal";
+import moment from "moment";
 
 export class CommandManager {
 	constructor(private plugin: ChainPlugin) {}
