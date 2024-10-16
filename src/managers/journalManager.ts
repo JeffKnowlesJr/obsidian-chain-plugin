@@ -1,4 +1,11 @@
-// journalManager.ts
+/*
+journalManager.ts: Manages journal entries
+- Creates and opens journal entries
+- Handles date formatting for entries
+- Interacts with Obsidian's file system
+- Applies user-defined templates to new entries
+*/
+
 import { App, TFile, Vault } from "obsidian";
 import { SettingsManager } from "./settingsManager";
 import { formatDate } from "../utils/dateUtils";

@@ -1,4 +1,10 @@
-// uiManager.ts
+/*
+uiManager.ts: Manages the user interface for the Chain Plugin
+- Adds ribbon icons and commands to Obsidian interface
+- Creates and manages the settings tab
+- Handles user interactions with the plugin UI
+*/
+
 import { Notice, addIcon, App, PluginSettingTab, Setting } from "obsidian";
 import ChainPlugin from "../main";
 import { ICON_DATA } from "../constants";

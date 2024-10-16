@@ -1,145 +1,31 @@
-# Obsidian Journal Plugin Project
+# Obsidian Chain Plugin
 
-## Overview
+## Project Overview
 
-This project aims to create a custom plugin for Obsidian that implements a digital journaling system inspired by the architecture described in the README-MJ.md file. The plugin will leverage Obsidian's existing markdown-based structure while adding advanced journaling features.
+The Obsidian Chain Plugin is a comprehensive journaling system designed for Obsidian, leveraging its markdown-based structure while adding advanced features for a robust and flexible journaling experience.
 
 ## Key Features
 
 1. Enhanced Markdown Editor
-
-    - Live preview
-    - Support for custom journal-specific markdown syntax
-
-2. Tag System
-
-    - Hierarchical tags for organizing entries
-    - Tag autocomplete and management
-
-3. Advanced Search
-
-    - Full-text search across all journal entries
-    - Search by tags, dates, and custom metadata
-
+2. Hierarchical Tag System
+3. Advanced Search Functionality
 4. Calendar View
-
-    - Visual representation of entries by date
-    - Quick navigation to specific dates
-
 5. Collaborative Features
-
-    - Shared journals (if Obsidian supports multi-user access)
-    - Comments and annotations on entries
-
 6. Data Analysis and Insights
+7. Export and Backup Options
+8. Custom Metadata Fields
+9. Media Attachments Support
+10. Customizable Templates
 
-    - Mood tracking and visualization
-    - Writing streak statistics
-    - Topic analysis and word clouds
+## Technical Implementation
 
-7. Export and Backup
+-   **Plugin Structure**: Utilizes Obsidian's plugin API, implemented in TypeScript
+-   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files with YAML frontmatter
+-   **User Interface**: Custom views using Obsidian's UI components, including a sidebar for quick access
+-   **Performance**: Efficient indexing and virtual rendering for large datasets
+-   **Security**: Utilizes Obsidian's encryption features with additional measures for sensitive data
 
-    - Export entries to various formats (PDF, HTML, plain text)
-    - Integration with Obsidian's existing backup systems
-
-8. Custom Metadata
-
-    - Add and manage custom fields for entries (e.g., mood, location, weather)
-
-9. Media Attachments
-
-    - Embed images, audio, and other files in journal entries
-    - Gallery view for attached media
-
-10. Templates
-    - Create and manage templates for different types of journal entries
-
-## Technical Approach
-
-1. Plugin Structure
-
-    - Utilize Obsidian's plugin API
-    - Implement the plugin in TypeScript
-
-2. Data Storage
-
-    - Leverage Obsidian's file-based storage system
-    - Store journal entries as markdown files
-    - Use YAML frontmatter for metadata and tags
-
-3. User Interface
-
-    - Create custom views using Obsidian's UI components
-    - Implement a sidebar for quick access to journal features
-
-4. Performance Optimization
-
-    - Implement efficient indexing for quick search and retrieval
-    - Use virtual rendering for large datasets (e.g., in calendar view)
-
-5. Security and Privacy
-    - Utilize Obsidian's built-in encryption features
-    - Implement additional encryption for sensitive data if necessary
-
-## Development Phases
-
-1. Planning and Design (2-3 weeks)
-
-    - Detailed feature specification
-    - UI/UX design
-    - Technical architecture planning
-
-2. Core Development (6-8 weeks)
-
-    - Basic plugin structure and integration with Obsidian
-    - Implementation of core journaling features
-    - Data model and storage implementation
-
-3. Advanced Features (4-6 weeks)
-
-    - Development of advanced search and tagging systems
-    - Implementation of data analysis features
-    - Creation of calendar and gallery views
-
-4. Testing and Refinement (3-4 weeks)
-
-    - Thorough testing of all features
-    - Performance optimization
-    - User feedback collection and implementation
-
-5. Documentation and Release Preparation (2-3 weeks)
-
-    - Writing user documentation
-    - Preparing for release on Obsidian community plugins
-
-6. Release and Ongoing Support
-    - Initial release to Obsidian community
-    - Gathering user feedback
-    - Continuous improvement and feature additions
-
-## Challenges and Considerations
-
-1. Obsidian API Limitations: Work within the constraints of Obsidian's plugin API.
-2. Performance: Ensure smooth performance, especially with large numbers of entries.
-3. Data Privacy: Implement strong privacy measures, especially for collaborative features.
-4. User Experience: Create an intuitive interface that integrates well with Obsidian's existing UI.
-5. Cross-platform Compatibility: Ensure the plugin works across all platforms supported by Obsidian.
-
-## Resources
-
--   [Obsidian Plugin Developer Docs](https://docs.obsidian.md/Plugins/Getting+started/Build+a+plugin)
--   [Obsidian API Documentation](https://github.com/obsidianmd/obsidian-api)
--   [TypeScript Documentation](https://www.typescriptlang.org/docs/)
--   [Markdown Guide](https://www.markdownguide.org/)
-
-## Next Steps
-
-1. Set up the development environment for Obsidian plugin development.
-2. Create a basic plugin structure following Obsidian's guidelines.
-3. Implement a simple journaling feature to test integration with Obsidian.
-4. Gradually build out the planned features, starting with core functionalities.
-
-This project will combine the power of Obsidian's markdown-based system with advanced journaling features, creating a robust and flexible journaling solution for Obsidian users.
+## Project Structure
 
 ---
 
@@ -217,3 +103,45 @@ obsidian-chain-plugin/
 ├── esbuild.config.mjs
 ├── version-bump.mjs
 └── README.md
+
+## Core Components
+
+1. **Main Entry Point** (`src/main.ts`): Initializes plugin components and manages lifecycle
+2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration
+3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements
+4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations
+5. **Constants and Types** (`src/constants.ts`, `src/types.ts`): Define shared values and types
+6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions
+7. **Logging and Events** (`src/services/logger.ts`, `src/services/eventBus.ts`): Manage logging and inter-component communication
+
+## Current Implementation
+
+-   Create and open dated journal entries
+-   Customizable journal folder and entry template
+-   Quick access via ribbon icon and command palette
+-   Settings management for user preferences
+
+## Next Steps
+
+1. Implement tag system and advanced search
+2. Develop calendar view for entry navigation
+3. Add data analysis and insights features
+4. Implement media attachments and gallery view
+
+## Installation and Usage
+
+1. Download the latest release
+2. Extract to Obsidian plugins folder
+3. Enable plugin in Obsidian settings
+4. Use ribbon icon or command palette to create/open entries
+5. Configure settings in Obsidian settings panel
+
+## Development and Contributing
+
+Contributions are welcome. Please refer to the GitHub repository for guidelines.
+
+## License
+
+This project is licensed under the MIT License.
+
+---

@@ -1,4 +1,11 @@
-// main.ts
+/*
+main.ts: Entry point for the Chain Plugin
+- Initializes core plugin components
+- Manages plugin lifecycle (load/unload)
+- Coordinates interactions between managers
+- Integrates with Obsidian's plugin system
+*/
+
 import { JournalManager } from "./managers/journalManager";
 import { SettingsManager } from "./managers/settingsManager";
 import { UIManager } from "./managers/uiManager";
@@ -20,6 +27,6 @@ export default class ChainPlugin extends Plugin {
 		this.uiManager = new UIManager(this);
 		this.uiManager.addRibbonIcon();
 		this.uiManager.addCommands();
-		// ...
+		// ... (placeholder for additional initialization steps)
 	}
 }

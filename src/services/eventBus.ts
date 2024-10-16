@@ -1,4 +1,9 @@
-// eventBus.ts
+/*
+eventBus.ts: Implements an event bus for the Chain Plugin
+- Allows components to subscribe to and emit events
+- Facilitates loose coupling between plugin components
+*/
+
 type Listener = (...args: any[]) => void;
 
 export class EventBus {

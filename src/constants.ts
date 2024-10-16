@@ -1,4 +1,10 @@
-// constants.ts
+/*
+constants.ts: Defines constant values for the Chain Plugin
+- Declares command identifiers
+- Defines setting keys
+- Stores SVG data for plugin icons
+*/
+
 export const COMMANDS = {
 	CREATE_ENTRY: "create-journal-entry",
 	OPEN_TODAY: "open-today-entry",

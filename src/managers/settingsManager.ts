@@ -1,6 +1,13 @@
 // settingsManager.ts
 import { Plugin } from "obsidian";
 
+/*
+settingsManager.ts: Manages plugin settings
+- Defines default settings and types
+- Loads and saves user settings
+- Provides methods to get and set individual settings
+*/
+
 interface ChainPluginSettings {
 	journalFolder: string;
 	defaultTemplate: string;
