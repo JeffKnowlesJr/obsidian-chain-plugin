@@ -2,27 +2,30 @@
 
 ## Project Overview
 
-The Obsidian Chain Plugin is a simple journaling system for Obsidian, enhancing its markdown-based structure with basic features for a streamlined journaling experience.
+The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhancing its markdown-based structure with features for a streamlined and organized journaling experience.
 
-## Key Features (MVP)
+## Key Features
 
-1. Create and open dated journal entries
-2. Basic customizable entry template
+1. Create and open dated journal entries within a structured yearly and monthly folder system
+2. Customizable entry template
 3. Quick access via ribbon icon and command palette
-4. Simple settings for journal folder location
+4. Future entry creation with automatic folder structure generation
+5. Monthly List, Log, and Tracker files
 
 ## Current Implementation
 
--   Create and open dated journal entries
--   Customizable journal folder and entry template
+-   Create and open dated journal entries in the format "YYYY-MM-DD Day.md"
+-   Customizable journal folder structure and entry template
 -   Quick access via ribbon icon and command palette
 -   Settings management for user preferences
+-   Automatic creation of yearly and monthly folders
+-   Generation of monthly List, Log, and Tracker files
 
 ## Technical Implementation
 
 -   **Plugin Structure**: Utilizes Obsidian's plugin API, implemented in TypeScript
--   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files
--   **User Interface**: Custom views using Obsidian's UI components, including a ribbon icon for quick access
+-   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files within a structured folder hierarchy
+-   **User Interface**: Custom views using Obsidian's UI components, including a ribbon icon for quick access and a date picker for future entries
 
 ## Project Structure
 
@@ -45,17 +48,18 @@ obsidian-chain-plugin/
 
 1. **Main Entry Point** (`src/main.ts`): Initializes plugin components and manages lifecycle
 2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration
-3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements
-4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations
+3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including the future entry date picker
+4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations and folder structure creation
 5. **Constants and Types** (`src/constants.ts`, `src/types.ts`): Define shared values and types
-6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions
+6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions for date handling and folder structure generation
 
 ## Next Steps
 
-1. Refine and optimize existing features
-2. Improve error handling and user feedback
-3. Enhance template customization options
-4. Add basic search functionality for journal entries
+1. Implement future entry creation with date picker
+2. Add automatic generation of monthly List, Log, and Tracker files
+3. Enhance folder structure creation logic
+4. Improve error handling and user feedback
+5. Add basic search functionality for journal entries
 
 ## Installation and Usage
 

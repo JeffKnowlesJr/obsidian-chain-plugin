@@ -27,6 +27,7 @@ export default class ChainPlugin extends Plugin {
 		this.uiManager = new UIManager(this);
 		this.uiManager.addRibbonIcon();
 		this.uiManager.addCommands();
+		this.uiManager.showFilesIcon();
 		// ... (placeholder for additional initialization steps)
 	}
 }

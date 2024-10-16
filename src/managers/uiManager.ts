@@ -7,7 +7,7 @@ uiManager.ts: Manages the user interface for the Chain Plugin
 
 import { Notice, addIcon, App, PluginSettingTab, Setting } from "obsidian";
 import ChainPlugin from "../main";
-import { ICON_DATA, COMMANDS, SETTINGS } from "../constants";
+import { ICON_DATA, COMMANDS, SETTINGS, TEMPLATES } from "../constants";
 
 export class UIManager {
 	constructor(private plugin: ChainPlugin) {}
@@ -17,19 +17,19 @@ export class UIManager {
 
 		this.plugin.addRibbonIcon(
 			"chain-journal",
-			"Create Journal Entry",
+			"Create Future Entry",
 			(evt: MouseEvent) => {
-				this.plugin.journalManager.createJournalEntry();
+				this.showFutureEntryModal();
 			}
 		);
 	}
 
 	addCommands() {
 		this.plugin.addCommand({
-			id: COMMANDS.CREATE_ENTRY,
-			name: "Create Journal Entry",
+			id: COMMANDS.CREATE_FUTURE_ENTRY,
+			name: "Create Future Entry",
 			callback: () => {
-				this.plugin.journalManager.createJournalEntry();
+				this.showFutureEntryModal();
 			},
 		});
 
@@ -37,7 +37,7 @@ export class UIManager {
 			id: COMMANDS.OPEN_TODAY,
 			name: "Open Today's Entry",
 			callback: () => {
-				this.plugin.journalManager.openTodayEntry();
+				this.plugin.journalManager.createJournalEntry();
 			},
 		});
 	}
@@ -46,6 +46,20 @@ export class UIManager {
 		this.plugin.addSettingTab(
 			new ChainPluginSettingTab(this.plugin.app, this.plugin)
 		);
+	}
+
+	showFilesIcon() {
+		this.plugin.app.workspace.leftRibbon.collapse();
+		this.plugin.app.workspace.leftRibbon.expand();
+	}
+
+	private showFutureEntryModal() {
+		// Implement the date picker modal here
+		// For now, we'll just use a simple prompt
+		const date = prompt("Enter date (YYYY-MM-DD):");
+		if (date) {
+			this.plugin.journalManager.createJournalEntry(new Date(date));
+		}
 	}
 }
 
@@ -59,7 +73,7 @@ class ChainPluginSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		this.addJournalFolderSetting(containerEl);
-		this.addDefaultTemplateSetting(containerEl);
+		this.addAllTemplateSettings(containerEl);
 	}
 
 	private addJournalFolderSetting(containerEl: HTMLElement) {
@@ -104,5 +118,51 @@ class ChainPluginSettingTab extends PluginSettingTab {
 						);
 					})
 			);
+	}
+
+	private addTemplateSetting(
+		containerEl: HTMLElement,
+		name: string,
+		desc: string,
+		setting: string
+	) {
+		new Setting(containerEl)
+			.setName(name)
+			.setDesc(desc)
+			.addTextArea((text) =>
+				text
+					.setPlaceholder(`Enter ${name.toLowerCase()} template`)
+					.setValue(this.plugin.settingsManager.getSetting(setting))
+					.onChange(async (value) => {
+						this.plugin.settingsManager.setSetting(setting, value);
+					})
+			);
+	}
+
+	private addAllTemplateSettings(containerEl: HTMLElement) {
+		this.addTemplateSetting(
+			containerEl,
+			"Daily Template",
+			"Template for daily entries. Use {date} for the current date.",
+			TEMPLATES.DAILY
+		);
+		this.addTemplateSetting(
+			containerEl,
+			"Monthly List Template",
+			"Template for monthly list. Use {month} for the month name.",
+			TEMPLATES.MONTHLY_LIST
+		);
+		this.addTemplateSetting(
+			containerEl,
+			"Monthly Log Template",
+			"Template for monthly log. Use {month} for the month name.",
+			TEMPLATES.MONTHLY_LOG
+		);
+		this.addTemplateSetting(
+			containerEl,
+			"Monthly Tracker Template",
+			"Template for monthly tracker. Use {month} for the month name.",
+			TEMPLATES.MONTHLY_TRACKER
+		);
 	}
 }

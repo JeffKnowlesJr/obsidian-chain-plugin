@@ -6,7 +6,7 @@ constants.ts: Defines constant values for the Chain Plugin
 */
 
 export const COMMANDS = {
-	CREATE_ENTRY: "create-journal-entry",
+	CREATE_FUTURE_ENTRY: "create-future-journal-entry",
 	OPEN_TODAY: "open-today-entry",
 };
 
@@ -31,3 +31,39 @@ export const ICON_DATA = `
   <path d="M65 50 Q65 60 75 60 Q85 60 85 70 Q85 80 75 80 Q65 80 65 70" stroke="currentColor" stroke-width="3" fill="none"/>
 </svg>
 `;
+
+export const MONTHLY_FILES = [
+	"{month} List.md",
+	"{month} Log.md",
+	"{month} Tracker.md",
+];
+
+export const TEMPLATES = {
+	DAILY: "dailyTemplate",
+	MONTHLY_LIST: "monthlyListTemplate",
+	MONTHLY_LOG: "monthlyLogTemplate",
+	MONTHLY_TRACKER: "monthlyTrackerTemplate",
+};
+
+interface ChainPluginSettings {
+	[SETTINGS.JOURNAL_FOLDER]: string;
+	[SETTINGS.DEFAULT_TEMPLATE]: string;
+	[TEMPLATES.DAILY]: string;
+	[TEMPLATES.MONTHLY_LIST]: string;
+	[TEMPLATES.MONTHLY_LOG]: string;
+	[TEMPLATES.MONTHLY_TRACKER]: string;
+}
+
+const DEFAULT_SETTINGS: ChainPluginSettings = {
+	[SETTINGS.JOURNAL_FOLDER]: "Journal",
+	[SETTINGS.DEFAULT_TEMPLATE]:
+		"# Journal Entry for {date}\n\n## Today's Goals\n\n## Notes\n\n## Reflections\n",
+	[TEMPLATES.DAILY]:
+		"# Daily Entry - {date}\n\n## Tasks\n- [ ] \n\n## Notes\n\n## Reflection\n",
+	[TEMPLATES.MONTHLY_LIST]:
+		"# {month} List\n\n## Goals\n- [ ] \n\n## Projects\n- \n\n## Ideas\n- ",
+	[TEMPLATES.MONTHLY_LOG]:
+		"# {month} Log\n\n| Date | Event |\n|------|-------|\n| ",
+	[TEMPLATES.MONTHLY_TRACKER]:
+		"# {month} Tracker\n\n| Date | Habit 1 | Habit 2 | Habit 3 |\n|------|---------|---------|---------|\n| ",
+};
