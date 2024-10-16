@@ -10,7 +10,8 @@ import { JournalManager } from "./managers/journalManager";
 import { SettingsManager } from "./managers/settingsManager";
 import { UIManager } from "./managers/uiManager";
 import { FileSystemManager } from "./managers/fileSystemManager";
-import { Plugin } from "obsidian";
+import { Plugin, Notice } from "obsidian";
+import { Logger } from "./services/logger";
 
 export default class ChainPlugin extends Plugin {
 	journalManager: JournalManager;
@@ -19,7 +20,11 @@ export default class ChainPlugin extends Plugin {
 	fileSystemManager: FileSystemManager;
 
 	async onload() {
-		if (!this.app.plugins.getPlugin("daily-notes")) {
+		console.log("Chain Plugin is loading...");
+		Logger.log("Chain Plugin onload method called");
+
+		if (!this.app.internalPlugins.plugins["daily-notes"]) {
+			console.log("Daily Notes plugin is not enabled");
 			new Notice(
 				"The Daily Notes core plugin is required for the Chain Plugin to work properly. Please enable it in the core plugins settings."
 			);
@@ -37,8 +42,14 @@ export default class ChainPlugin extends Plugin {
 			this.fileSystemManager
 		);
 		this.uiManager = new UIManager(this);
-		this.uiManager.addRibbonIcon();
+		this.uiManager.addRibbonIcon(); // This will now add both icons
 		this.uiManager.addCommands();
-		// ... (placeholder for additional initialization steps)
+
+		console.log("Chain Plugin loaded successfully");
+		Logger.log("Chain Plugin loaded successfully");
+	}
+
+	onunload() {
+		console.log("Chain Plugin unloaded");
 	}
 }

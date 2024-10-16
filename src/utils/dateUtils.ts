@@ -4,20 +4,20 @@ dateUtils.ts: Provides utility functions for date handling
 - Offers helper functions for date-related operations
 */
 
-export function formatDate(date: Date): string {
-	return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD
+import { moment } from "obsidian";
+
+export function formatDate(date: moment.Moment): string {
+	return date.format("YYYY-MM-DD dddd");
 }
 
-export function getYearFolderName(date: Date): string {
-	return `${date.getFullYear()}`;
+export function getYearFolderName(date: moment.Moment): string {
+	return date.format("YYYY");
 }
 
-export function getMonthFolderName(date: Date): string {
-	const month = date.toLocaleString("default", { month: "long" });
-	return `${month}`;
+export function getMonthFolderName(date: moment.Moment): string {
+	return date.format("MMMM");
 }
 
-export function getDayFileName(date: Date): string {
-	const dayName = date.toLocaleString("default", { weekday: "long" });
-	return `${formatDate(date)} ${dayName}.md`;
+export function getDayFileName(date: moment.Moment): string {
+	return `${date.format("YYYY-MM-DD dddd")}.md`;
 }

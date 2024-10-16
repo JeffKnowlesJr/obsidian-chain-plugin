@@ -11,9 +11,9 @@ settingsManager.ts: Manages plugin settings
 */
 
 interface ChainPluginSettings {
-	[SETTINGS.JOURNAL_FOLDER]: string;
-	[SETTINGS.DEFAULT_TEMPLATE]: string;
-	[SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE]: string;
+	journalFolder: string;
+	defaultTemplate: string;
+	dailyNotesFolderOverride: string;
 	dateFormat: string;
 	newFileLocation: string;
 	templateFileLocation: string;
@@ -21,10 +21,10 @@ interface ChainPluginSettings {
 }
 
 const DEFAULT_SETTINGS: ChainPluginSettings = {
-	[SETTINGS.JOURNAL_FOLDER]: "Journal",
-	[SETTINGS.DEFAULT_TEMPLATE]:
+	journalFolder: "Journal",
+	defaultTemplate:
 		"# Journal Entry for {date}\n\n## Today's Goals\n\n## Notes\n\n## Reflections\n",
-	[SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE]: "",
+	dailyNotesFolderOverride: "",
 	dateFormat: "YYYY-MM-DD",
 	newFileLocation: "",
 	templateFileLocation: "",
@@ -59,11 +59,11 @@ export class SettingsManager {
 		}
 	}
 
-	getSetting(key: string): string {
-		return this.settings[key] || "";
+	getSetting(key: keyof ChainPluginSettings): any {
+		return this.settings[key];
 	}
 
-	setSetting(key: keyof typeof SETTINGS, value: string) {
+	setSetting(key: keyof ChainPluginSettings, value: any) {
 		this.settings[key] = value;
 		this.saveSettings();
 	}

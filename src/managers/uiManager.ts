@@ -15,6 +15,8 @@ import {
 } from "obsidian";
 import ChainPlugin from "../main";
 import { ICON_DATA, COMMANDS, SETTINGS, TEMPLATES } from "../constants";
+import moment from "moment";
+import { Plugin } from "obsidian";
 
 export class UIManager {
 	constructor(private plugin: ChainPlugin) {}
@@ -27,6 +29,15 @@ export class UIManager {
 			"Create Future Entry",
 			(evt: MouseEvent) => {
 				this.showFutureEntryModal();
+			}
+		);
+
+		// Add the new reload icon
+		this.plugin.addRibbonIcon(
+			"reset",
+			"Reload Chain Plugin",
+			(evt: MouseEvent) => {
+				this.reloadPlugin();
 			}
 		);
 	}
@@ -57,11 +68,29 @@ export class UIManager {
 
 	private showFutureEntryModal() {
 		console.log("Showing future entry modal");
-		const modal = new FutureEntryModal(this.plugin.app, (date: Date) => {
-			console.log("Future entry modal submitted with date:", date);
-			this.plugin.journalManager.createOrUpdateDailyNote(date);
-		});
+		const modal = new FutureEntryModal(
+			this.plugin.app,
+			(date: moment.Moment) => {
+				console.log(
+					"Future entry modal submitted with date:",
+					date.format()
+				);
+				this.plugin.journalManager.createOrUpdateDailyNote(date);
+			}
+		);
 		modal.open();
+	}
+
+	private reloadPlugin() {
+		// Unload the plugin
+		(this.plugin.app as any).plugins.disablePlugin("obsidian-chain-plugin");
+
+		// Load the plugin again
+		setTimeout(() => {
+			(this.plugin.app as any).plugins.enablePlugin(
+				"obsidian-chain-plugin"
+			);
+		}, 100); // Small delay to ensure proper unloading
 	}
 }
 
@@ -259,13 +288,13 @@ class ChainPluginSettingTab extends PluginSettingTab {
 }
 
 class FutureEntryModal extends Modal {
-	private date: Date;
-	private onSubmit: (date: Date) => void;
+	private date: moment.Moment;
+	private onSubmit: (date: moment.Moment) => void;
 
-	constructor(app: App, onSubmit: (date: Date) => void) {
+	constructor(app: App, onSubmit: (date: moment.Moment) => void) {
 		super(app);
 		this.onSubmit = onSubmit;
-		this.date = new Date();
+		this.date = moment();
 	}
 
 	onOpen() {
@@ -280,10 +309,11 @@ class FutureEntryModal extends Modal {
 					input.inputEl.type = "date";
 					input.inputEl.addEventListener("change", (e) => {
 						const target = e.target as HTMLInputElement;
-						const newDate = new Date(target.value);
-						if (!isNaN(newDate.getTime())) {
-							this.date = newDate;
+						const newDate = moment(target.value);
+						if (!newDate.isValid()) {
+							return;
 						}
+						this.date = newDate;
 					});
 				})
 		);
@@ -304,7 +334,7 @@ class FutureEntryModal extends Modal {
 		contentEl.empty();
 	}
 
-	private formatDate(date: Date): string {
-		return date.toISOString().split("T")[0];
+	private formatDate(date: moment.Moment): string {
+		return date.format("YYYY-MM-DD");
 	}
 }

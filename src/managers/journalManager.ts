@@ -25,42 +25,41 @@ export class JournalManager {
 		private fileSystemManager: FileSystemManager
 	) {}
 
-	async createOrUpdateDailyNote(date: Date = new Date()) {
-		console.log("createOrUpdateDailyNote called with date:", date);
-		const folder =
+	async createOrUpdateDailyNote(date: moment.Moment = moment()) {
+		Logger.log("createOrUpdateDailyNote called with date:", date.format());
+		const baseFolder =
 			this.settingsManager.getSetting("newFileLocation") || "Daily Notes";
-		const format =
-			this.settingsManager.getSetting("dateFormat") || "YYYY-MM-DD";
-		console.log("Daily note settings:", { folder, format });
-		const fileName = moment(date).format(format);
-		const filePath = `${folder}/${fileName}.md`;
-		console.log("File path:", filePath);
+		const yearFolder = date.format("YYYY");
+		const monthFolder = date.format("MMMM");
+		const fileName = date.format("YYYY-MM-DD dddd") + ".md";
+		const folderPath = `${baseFolder}/${yearFolder}/${monthFolder}`;
+		const filePath = `${folderPath}/${fileName}`;
+		Logger.log("Constructed file path:", filePath);
 
 		try {
-			await this.fileSystemManager.ensureFolderStructure(folder);
-			console.log("Folder structure ensured");
+			await this.fileSystemManager.ensureFolderStructure(folderPath);
+			Logger.log("Folder structure ensured");
 			let file = this.app.vault.getAbstractFileByPath(filePath);
-			console.log("Existing file:", file);
+			Logger.log("Existing file:", file);
 
 			if (!file) {
-				console.log("Creating new file");
+				Logger.log("Creating new file");
 				const templateContent = await this.getTemplateContent();
 				file = await this.fileSystemManager.createFile(
 					filePath,
 					templateContent || this.getDefaultTemplate(date)
 				);
-				console.log("New file created:", file);
+				Logger.log("New file created:", file);
 			}
 
 			if (file instanceof TFile) {
-				console.log("Opening file in main pane");
+				Logger.log("Opening file in main pane");
 				await this.fileSystemManager.openFileInMainPane(file);
 			} else {
 				throw new Error("Created file is not a TFile");
 			}
 		} catch (error) {
-			console.error("Error in createOrUpdateDailyNote:", error);
-			Logger.error("Failed to create or open daily note", error as Error);
+			Logger.error("Error in createOrUpdateDailyNote:", error as Error);
 			new Notice(
 				"Failed to create or open daily note. Check the console for details."
 			);
@@ -80,14 +79,14 @@ export class JournalManager {
 		return null;
 	}
 
-	private getDefaultTemplate(date: Date): string {
+	private getDefaultTemplate(date: moment.Moment): string {
 		const template =
 			this.settingsManager.getSetting(SETTINGS.DEFAULT_TEMPLATE) ||
 			"# Journal Entry for {date}";
-		return template.replace("{date}", formatDate(date));
+		return template.replace("{date}", date.format("YYYY-MM-DD dddd"));
 	}
 
-	async createJournalEntry(date: Date) {
+	async createJournalEntry(date: moment.Moment = moment()) {
 		await this.createOrUpdateDailyNote(date);
 	}
 	// Other journal-related methods
