@@ -17,80 +17,28 @@ import ChainPlugin from "../main";
 import { ICON_DATA, COMMANDS, SETTINGS, TEMPLATES } from "../constants";
 import moment from "moment";
 import { Plugin } from "obsidian";
+import { RibbonManager } from "./ribbonManager";
+import { CommandManager } from "./commandManager";
 
 export class UIManager {
-	constructor(private plugin: ChainPlugin) {}
+	private ribbonManager: RibbonManager;
+	private commandManager: CommandManager;
 
-	addRibbonIcon() {
-		addIcon("chain-journal", ICON_DATA);
-
-		this.plugin.addRibbonIcon(
-			"chain-journal",
-			"Create Future Entry",
-			(evt: MouseEvent) => {
-				this.showFutureEntryModal();
-			}
-		);
-
-		// Add the new reload icon
-		this.plugin.addRibbonIcon(
-			"reset",
-			"Reload Chain Plugin",
-			(evt: MouseEvent) => {
-				this.reloadPlugin();
-			}
-		);
+	constructor(private plugin: ChainPlugin) {
+		this.ribbonManager = new RibbonManager(plugin);
+		this.commandManager = new CommandManager(plugin);
 	}
 
-	addCommands() {
-		this.plugin.addCommand({
-			id: COMMANDS.CREATE_FUTURE_ENTRY,
-			name: "Create Future Entry",
-			callback: () => {
-				this.showFutureEntryModal();
-			},
-		});
-
-		this.plugin.addCommand({
-			id: COMMANDS.OPEN_TODAY,
-			name: "Open Today's Entry",
-			callback: () => {
-				this.plugin.journalManager.createOrUpdateDailyNote();
-			},
-		});
+	initialize() {
+		this.ribbonManager.addIcons();
+		this.commandManager.addCommands();
+		this.addSettingTab();
 	}
 
-	addSettingTab() {
+	private addSettingTab() {
 		this.plugin.addSettingTab(
 			new ChainPluginSettingTab(this.plugin.app, this.plugin)
 		);
-	}
-
-	private showFutureEntryModal() {
-		console.log("Showing future entry modal");
-		const modal = new FutureEntryModal(
-			this.plugin.app,
-			(date: moment.Moment) => {
-				console.log(
-					"Future entry modal submitted with date:",
-					date.format()
-				);
-				this.plugin.journalManager.createOrUpdateDailyNote(date);
-			}
-		);
-		modal.open();
-	}
-
-	private reloadPlugin() {
-		// Unload the plugin
-		(this.plugin.app as any).plugins.disablePlugin("obsidian-chain-plugin");
-
-		// Load the plugin again
-		setTimeout(() => {
-			(this.plugin.app as any).plugins.enablePlugin(
-				"obsidian-chain-plugin"
-			);
-		}, 100); // Small delay to ensure proper unloading
 	}
 }
 

@@ -42,8 +42,7 @@ export default class ChainPlugin extends Plugin {
 			this.fileSystemManager
 		);
 		this.uiManager = new UIManager(this);
-		this.uiManager.addRibbonIcon(); // This will now add both icons
-		this.uiManager.addCommands();
+		this.uiManager.initialize();
 
 		console.log("Chain Plugin loaded successfully");
 		Logger.log("Chain Plugin loaded successfully");
