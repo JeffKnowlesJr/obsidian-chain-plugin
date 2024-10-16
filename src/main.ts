@@ -13,9 +13,11 @@ export default class ChainPlugin extends Plugin {
 		this.settingsManager = new SettingsManager(this);
 		await this.settingsManager.loadSettings();
 
-		this.journalManager = new JournalManager(this.app, this.settings);
+		this.journalManager = new JournalManager(
+			this.app,
+			this.settingsManager
+		);
 		this.uiManager = new UIManager(this);
-
 		this.uiManager.addRibbonIcon();
 		this.uiManager.addCommands();
 		// ...
