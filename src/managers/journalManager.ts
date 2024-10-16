@@ -6,7 +6,7 @@ journalManager.ts: Manages journal entries
 - Applies user-defined templates to new entries
 */
 
-import { App, TFile, Notice } from "obsidian";
+import { App, TFile, Notice, moment } from "obsidian";
 import { SettingsManager } from "./settingsManager";
 import { FileSystemManager } from "./fileSystemManager";
 import {
@@ -16,7 +16,7 @@ import {
 	getDayFileName,
 } from "../utils/dateUtils";
 import { Logger } from "../services/logger";
-import { SETTINGS, MONTHLY_FILES, TEMPLATES } from "../constants";
+import { SETTINGS } from "../constants";
 
 export class JournalManager {
 	constructor(
@@ -25,109 +25,59 @@ export class JournalManager {
 		private fileSystemManager: FileSystemManager
 	) {}
 
-	async createJournalEntry(date: Date = new Date()) {
-		const yearFolder = getYearFolderName(date);
-		const monthFolder = getMonthFolderName(date);
-		const fileName = getDayFileName(date);
-		const journalFolder = this.settingsManager.getSetting(
-			SETTINGS.JOURNAL_FOLDER
-		);
-		const folderPath = `${journalFolder}/${yearFolder}/${monthFolder}`;
-		const filePath = `${folderPath}/${fileName}`;
+	async createOrUpdateDailyNote(date: Date = new Date()) {
+		console.log("createOrUpdateDailyNote called with date:", date);
+		const folder =
+			this.settingsManager.getSetting("newFileLocation") || "Daily Notes";
+		const format =
+			this.settingsManager.getSetting("dateFormat") || "YYYY-MM-DD";
+		console.log("Daily note settings:", { folder, format });
+		const fileName = moment(date).format(format);
+		const filePath = `${folder}/${fileName}.md`;
+		console.log("File path:", filePath);
+
 		try {
-			await this.fileSystemManager.ensureFolderStructure(folderPath);
-			await this.createMonthlyFiles(date, folderPath);
-			const fileExists = await this.fileSystemManager.fileExists(
-				filePath
-			);
-			if (!fileExists) {
-				const file = await this.fileSystemManager.createFile(
+			await this.fileSystemManager.ensureFolderStructure(folder);
+			console.log("Folder structure ensured");
+			let file = this.app.vault.getAbstractFileByPath(filePath);
+			console.log("Existing file:", file);
+
+			if (!file) {
+				console.log("Creating new file");
+				const templateContent = await this.getTemplateContent();
+				file = await this.fileSystemManager.createFile(
 					filePath,
-					this.getDefaultTemplate(date)
+					templateContent || this.getDefaultTemplate(date)
 				);
+				console.log("New file created:", file);
+			}
+
+			if (file instanceof TFile) {
+				console.log("Opening file in main pane");
 				await this.fileSystemManager.openFileInMainPane(file);
 			} else {
-				const file = this.app.vault.getAbstractFileByPath(
-					filePath
-				) as TFile;
-				await this.fileSystemManager.openFileInMainPane(file);
+				throw new Error("Created file is not a TFile");
 			}
 		} catch (error) {
-			Logger.error(
-				"Failed to create or open journal entry",
-				error as Error
-			);
+			console.error("Error in createOrUpdateDailyNote:", error);
+			Logger.error("Failed to create or open daily note", error as Error);
 			new Notice(
-				"Failed to create or open journal entry. Check the console for details."
+				"Failed to create or open daily note. Check the console for details."
 			);
 		}
 	}
-	async openTodayEntry() {
-		const date = new Date();
-		const yearFolder = getYearFolderName(date);
-		const monthFolder = getMonthFolderName(date);
-		const fileName = getDayFileName(date);
-		const journalFolder = this.settingsManager.getSetting(
-			SETTINGS.JOURNAL_FOLDER
+
+	private async getTemplateContent(): Promise<string | null> {
+		const templatePath = this.settingsManager.getSetting(
+			"templateFileLocation"
 		);
-		const folderPath = `${journalFolder}/${yearFolder}/${monthFolder}`;
-		const filePath = `${folderPath}/${fileName}`;
-		const file = this.app.vault.getAbstractFileByPath(filePath);
-		if (file instanceof TFile) {
-			await this.fileSystemManager.openFileInMainPane(file);
-		} else {
-			await this.createJournalEntry(date);
+		if (!templatePath) return null;
+
+		const templateFile = this.app.vault.getAbstractFileByPath(templatePath);
+		if (templateFile instanceof TFile) {
+			return await this.app.vault.read(templateFile);
 		}
-	}
-
-	private async ensureFolderStructure(folderPath: string) {
-		const folders = folderPath
-			.split("/")
-			.filter((folder) => folder.length > 0);
-		let currentPath = "";
-
-		for (const folder of folders) {
-			currentPath += folder + "/";
-			try {
-				const folderExists = await this.app.vault.adapter.exists(
-					currentPath
-				);
-				if (!folderExists) {
-					await this.app.vault.createFolder(currentPath);
-				}
-			} catch (error) {
-				Logger.error(
-					`Failed to create folder: ${currentPath}`,
-					error as Error
-				);
-				throw new Error(
-					`Failed to create folder structure: ${
-						(error as Error).message
-					}`
-				);
-			}
-		}
-	}
-
-	private async createMonthlyFiles(date: Date, folderPath: string) {
-		const monthName = getMonthFolderName(date);
-		const files = [
-			{ name: `${monthName} List.md`, template: TEMPLATES.MONTHLY_LIST },
-			{ name: `${monthName} Log.md`, template: TEMPLATES.MONTHLY_LOG },
-			{
-				name: `${monthName} Tracker.md`,
-				template: TEMPLATES.MONTHLY_TRACKER,
-			},
-		];
-
-		for (const file of files) {
-			const filePath = `${folderPath}/${file.name}`;
-			if (!(await this.app.vault.adapter.exists(filePath))) {
-				const template = this.settingsManager.getSetting(file.template);
-				const content = template.replace("{month}", monthName);
-				await this.app.vault.create(filePath, content);
-			}
-		}
+		return null;
 	}
 
 	private getDefaultTemplate(date: Date): string {
@@ -135,6 +85,10 @@ export class JournalManager {
 			this.settingsManager.getSetting(SETTINGS.DEFAULT_TEMPLATE) ||
 			"# Journal Entry for {date}";
 		return template.replace("{date}", formatDate(date));
+	}
+
+	async createJournalEntry(date: Date) {
+		await this.createOrUpdateDailyNote(date);
 	}
 	// Other journal-related methods
 }

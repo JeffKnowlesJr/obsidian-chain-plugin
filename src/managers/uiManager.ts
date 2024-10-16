@@ -44,7 +44,7 @@ export class UIManager {
 			id: COMMANDS.OPEN_TODAY,
 			name: "Open Today's Entry",
 			callback: () => {
-				this.plugin.journalManager.createJournalEntry();
+				this.plugin.journalManager.createOrUpdateDailyNote();
 			},
 		});
 	}
@@ -56,8 +56,10 @@ export class UIManager {
 	}
 
 	private showFutureEntryModal() {
+		console.log("Showing future entry modal");
 		const modal = new FutureEntryModal(this.plugin.app, (date: Date) => {
-			this.plugin.journalManager.createJournalEntry(date);
+			console.log("Future entry modal submitted with date:", date);
+			this.plugin.journalManager.createOrUpdateDailyNote(date);
 		});
 		modal.open();
 	}
@@ -73,6 +75,10 @@ class ChainPluginSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		this.addJournalFolderSetting(containerEl);
+		this.addDateFormatSetting(containerEl);
+		this.addNewFileLocationSetting(containerEl);
+		this.addTemplateFileLocationSetting(containerEl);
+		this.addOpenDailyNoteOnStartupSetting(containerEl);
 		this.addAllTemplateSettings(containerEl);
 	}
 
@@ -97,23 +103,85 @@ class ChainPluginSettingTab extends PluginSettingTab {
 			);
 	}
 
-	private addDefaultTemplateSetting(containerEl: HTMLElement) {
+	private addDateFormatSetting(containerEl: HTMLElement) {
 		new Setting(containerEl)
-			.setName("Default template")
+			.setName("Date format")
 			.setDesc(
-				"Template for new journal entries. Use {date} for the current date."
+				"Format for daily note filenames. Use YYYY-MM-DD for reference."
 			)
-			.addTextArea((text) =>
+			.addText((text) =>
 				text
-					.setPlaceholder("# Journal Entry for {date}")
+					.setPlaceholder("YYYY-MM-DD")
+					.setValue(
+						this.plugin.settingsManager.getSetting("dateFormat")
+					)
+					.onChange(async (value) => {
+						this.plugin.settingsManager.setSetting(
+							"dateFormat",
+							value
+						);
+					})
+			);
+	}
+
+	private addNewFileLocationSetting(containerEl: HTMLElement) {
+		new Setting(containerEl)
+			.setName("New file location")
+			.setDesc("Where new daily notes will be placed.")
+			.addText((text) =>
+				text
+					.setPlaceholder("Daily Notes/")
 					.setValue(
 						this.plugin.settingsManager.getSetting(
-							SETTINGS.DEFAULT_TEMPLATE
+							"newFileLocation"
 						)
 					)
 					.onChange(async (value) => {
 						this.plugin.settingsManager.setSetting(
-							SETTINGS.DEFAULT_TEMPLATE,
+							"newFileLocation",
+							value
+						);
+					})
+			);
+	}
+
+	private addTemplateFileLocationSetting(containerEl: HTMLElement) {
+		new Setting(containerEl)
+			.setName("Template file location")
+			.setDesc("Choose a file to use as a template for notes.")
+			.addText((text) =>
+				text
+					.setPlaceholder("Templates/Daily Note Template.md")
+					.setValue(
+						this.plugin.settingsManager.getSetting(
+							"templateFileLocation"
+						)
+					)
+					.onChange(async (value) => {
+						this.plugin.settingsManager.setSetting(
+							"templateFileLocation",
+							value
+						);
+					})
+			);
+	}
+
+	private addOpenDailyNoteOnStartupSetting(containerEl: HTMLElement) {
+		new Setting(containerEl)
+			.setName("Open daily note on startup")
+			.setDesc(
+				"Automatically open a daily note when the app or vault is opened."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settingsManager.getSetting(
+							"openDailyNoteOnStartup"
+						)
+					)
+					.onChange(async (value) => {
+						this.plugin.settingsManager.setSetting(
+							"openDailyNoteOnStartup",
 							value
 						);
 					})
@@ -164,6 +232,29 @@ class ChainPluginSettingTab extends PluginSettingTab {
 			"Template for monthly tracker. Use {month} for the month name.",
 			TEMPLATES.MONTHLY_TRACKER
 		);
+	}
+
+	private addDailyNotesFolderOverrideSetting(containerEl: HTMLElement) {
+		new Setting(containerEl)
+			.setName("Daily Notes Folder Override")
+			.setDesc(
+				"Override the folder set in Daily Notes plugin (leave empty to use Daily Notes plugin setting)"
+			)
+			.addText((text) =>
+				text
+					.setPlaceholder("Daily Notes")
+					.setValue(
+						this.plugin.settingsManager.getSetting(
+							SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE
+						)
+					)
+					.onChange(async (value) => {
+						this.plugin.settingsManager.setSetting(
+							SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE,
+							value
+						);
+					})
+			);
 	}
 }
 

@@ -19,6 +19,13 @@ export default class ChainPlugin extends Plugin {
 	fileSystemManager: FileSystemManager;
 
 	async onload() {
+		if (!this.app.plugins.getPlugin("daily-notes")) {
+			new Notice(
+				"The Daily Notes core plugin is required for the Chain Plugin to work properly. Please enable it in the core plugins settings."
+			);
+			return;
+		}
+
 		this.settingsManager = new SettingsManager(this);
 		await this.settingsManager.loadSettings();
 

@@ -13,6 +13,7 @@ export const COMMANDS = {
 export const SETTINGS = {
 	JOURNAL_FOLDER: "journalFolder",
 	DEFAULT_TEMPLATE: "defaultTemplate",
+	DAILY_NOTES_FOLDER_OVERRIDE: "dailyNotesFolderOverride",
 };
 
 export const ICON_DATA = `

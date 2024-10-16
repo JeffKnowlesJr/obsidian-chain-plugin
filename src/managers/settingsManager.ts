@@ -13,12 +13,22 @@ settingsManager.ts: Manages plugin settings
 interface ChainPluginSettings {
 	[SETTINGS.JOURNAL_FOLDER]: string;
 	[SETTINGS.DEFAULT_TEMPLATE]: string;
+	[SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE]: string;
+	dateFormat: string;
+	newFileLocation: string;
+	templateFileLocation: string;
+	openDailyNoteOnStartup: boolean;
 }
 
 const DEFAULT_SETTINGS: ChainPluginSettings = {
 	[SETTINGS.JOURNAL_FOLDER]: "Journal",
 	[SETTINGS.DEFAULT_TEMPLATE]:
 		"# Journal Entry for {date}\n\n## Today's Goals\n\n## Notes\n\n## Reflections\n",
+	[SETTINGS.DAILY_NOTES_FOLDER_OVERRIDE]: "",
+	dateFormat: "YYYY-MM-DD",
+	newFileLocation: "",
+	templateFileLocation: "",
+	openDailyNoteOnStartup: false,
 };
 
 export class SettingsManager {

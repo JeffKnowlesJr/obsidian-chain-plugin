@@ -5,6 +5,7 @@ export class FileSystemManager {
 	constructor(private app: App) {}
 
 	async ensureFolderStructure(folderPath: string): Promise<void> {
+		console.log("Ensuring folder structure for:", folderPath);
 		const folders = folderPath
 			.split("/")
 			.filter((folder) => folder.length > 0);
@@ -26,9 +27,11 @@ export class FileSystemManager {
 				);
 			}
 		}
+		console.log("Folder structure created:", folderPath);
 	}
 
 	async createFile(filePath: string, content: string): Promise<TFile> {
+		console.log("Creating file:", filePath);
 		return await this.app.vault.create(filePath, content);
 	}
 
@@ -41,7 +44,9 @@ export class FileSystemManager {
 	}
 
 	async openFileInMainPane(file: TFile): Promise<void> {
+		console.log("Opening file in main pane:", file.path);
 		const leaf = this.app.workspace.getLeaf(false);
 		await leaf.openFile(file, { active: true });
+		console.log("File opened in main pane");
 	}
 }
