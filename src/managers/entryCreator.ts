@@ -30,8 +30,19 @@ export class EntryCreator {
 		const { folderPath, filePath } = this.getFilePaths(date);
 
 		try {
-			Logger.debug(`Ensuring folder structure: ${folderPath}`);
-			await this.fileSystemManager.ensureFolderStructure(folderPath);
+			Logger.debug(`Checking folder structure: ${folderPath}`);
+			const folderExists = await this.fileSystemManager.folderExists(
+				folderPath
+			);
+			if (!folderExists) {
+				Logger.info(
+					`Folder structure not found. Creating: ${folderPath}`
+				);
+				await this.fileSystemManager.ensureFolderStructure(folderPath);
+			} else {
+				Logger.debug(`Folder structure already exists: ${folderPath}`);
+			}
+
 			let file = this.app.vault.getAbstractFileByPath(filePath);
 			if (!file) {
 				Logger.info(`File not found. Creating new file: ${filePath}`);
@@ -39,18 +50,18 @@ export class EntryCreator {
 			} else if (file instanceof TFile) {
 				Logger.info(`File already exists: ${filePath}`);
 			} else {
-				throw new Error(`Unexpected file type at ${filePath}`);
+				Logger.info(`Unexpected file type at ${filePath}`);
+				return;
 			}
-			await this.app.workspace.getLeaf(false).openFile(file);
+
 			if (file instanceof TFile) {
 				Logger.debug(`Opening file: ${filePath}`);
 				await this.fileSystemManager.openFileInMainPane(file);
 			} else {
-				throw new Error("Created file is not a TFile");
+				Logger.info("Created file is not a TFile");
 			}
 		} catch (error) {
-			Logger.error(`Error in createOrUpdateDailyNote: ${error}`);
-			new Notice(`Failed to create or open daily note: ${error.message}`);
+			Logger.info(`Note creation info: ${error.message}`);
 		}
 	}
 

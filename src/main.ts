@@ -36,6 +36,7 @@ export default class ChainPlugin extends Plugin {
 		Logger.log("Chain Plugin is loading...");
 		await this.initializeManagers();
 		this.pluginManager.checkDailyNotesPlugin();
+		this.pluginManager.overrideDailyNotesOpenToday();
 		await this.handleStartup();
 		await this.updateDailyNotesSettings();
 		Logger.log("Chain Plugin loaded successfully");

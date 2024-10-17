@@ -39,4 +39,14 @@ export class FileSystemManager {
 		const leaf = this.app.workspace.getLeaf(false);
 		await leaf.openFile(file, { active: true });
 	}
+
+	async folderExists(folderPath: string): Promise<boolean> {
+		try {
+			const stat = await this.app.vault.adapter.stat(folderPath);
+			return stat && stat.type === "folder";
+		} catch (error) {
+			Logger.debug(`Folder does not exist: ${folderPath}`);
+			return false;
+		}
+	}
 }

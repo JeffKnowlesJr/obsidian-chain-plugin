@@ -15,7 +15,7 @@ export function getYearFolderName(date: moment.Moment): string {
 }
 
 export function getMonthFolderName(date: moment.Moment): string {
-	return date.format("MM-mmmm");
+	return date.format("MM-MMMM");
 }
 
 export function getDayFileName(date: moment.Moment): string {

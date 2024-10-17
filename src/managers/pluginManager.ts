@@ -1,3 +1,4 @@
+import ChainPlugin from "../main";
 import { Plugin, Notice } from "obsidian";
 import { Logger } from "../services/logger";
 import { SettingsManager } from "./settingsManager";
@@ -78,5 +79,63 @@ export class PluginManager {
 		return Object.keys(currentSettings).some(
 			(key) => currentSettings[key] !== newSettings[key]
 		);
+	}
+
+	overrideDailyNotesOpenToday() {
+		const dailyNotesPlugin = (this.plugin.app as any).internalPlugins
+			.plugins["daily-notes"];
+		if (dailyNotesPlugin && dailyNotesPlugin.instance) {
+			const dailyNotesInstance = dailyNotesPlugin.instance;
+
+			// Override openToday method
+			if (typeof dailyNotesInstance.openToday === "function") {
+				const originalOpenToday =
+					dailyNotesInstance.openToday.bind(dailyNotesInstance);
+				dailyNotesInstance.openToday = async () => {
+					await (
+						this.plugin as ChainPlugin
+					).journalManager.createOrUpdateDailyNote();
+				};
+				Logger.log("Daily Notes openToday method overridden");
+			}
+
+			// Override getOrCreateDailyNote method
+			if (typeof dailyNotesInstance.getOrCreateDailyNote === "function") {
+				const originalGetOrCreateDailyNote =
+					dailyNotesInstance.getOrCreateDailyNote.bind(
+						dailyNotesInstance
+					);
+				dailyNotesInstance.getOrCreateDailyNote = async (
+					date: moment.Moment
+				) => {
+					await (
+						this.plugin as ChainPlugin
+					).journalManager.createOrUpdateDailyNote(date);
+					return originalGetOrCreateDailyNote(date);
+				};
+				Logger.log(
+					"Daily Notes getOrCreateDailyNote method overridden"
+				);
+			}
+
+			// Override getDailyNote method
+			if (typeof dailyNotesInstance.getDailyNote === "function") {
+				const originalGetDailyNote =
+					dailyNotesInstance.getDailyNote.bind(dailyNotesInstance);
+				dailyNotesInstance.getDailyNote = (date: moment.Moment) => {
+					(
+						this.plugin as ChainPlugin
+					).journalManager.createOrUpdateDailyNote(date);
+					return originalGetDailyNote(date);
+				};
+				Logger.log("Daily Notes getDailyNote method overridden");
+			}
+
+			Logger.log("Daily Notes plugin integration complete");
+		} else {
+			Logger.log(
+				"Daily Notes plugin not found or not enabled. Chain Plugin will operate independently."
+			);
+		}
 	}
 }
