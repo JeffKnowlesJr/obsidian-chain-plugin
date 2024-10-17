@@ -46,7 +46,7 @@ export const TEMPLATES = {
 	MONTHLY_TRACKER: "monthlyTrackerTemplate",
 };
 
-interface ChainPluginSettings {
+export interface ChainPluginSettings {
 	journalFolder: string;
 	defaultTemplate: string;
 	dailyNotesFolderOverride: string;
@@ -56,13 +56,13 @@ interface ChainPluginSettings {
 	openDailyNoteOnStartup: boolean;
 }
 
-const DEFAULT_SETTINGS: ChainPluginSettings = {
+export const DEFAULT_SETTINGS: ChainPluginSettings = {
 	journalFolder: "Journal",
 	defaultTemplate:
 		"## Log\n\n### Ideas\n- \n### To Do\n- [ ] \n### Contacts\n- [ ] \n### Events\n- \n\n****\n## Routine Checklist\n\n- [ ] **Daily**\n    - [ ] Morning",
 	dailyNotesFolderOverride: "",
 	dateFormat: "YYYY-MM-DD dddd",
-	newFileLocation: "",
-	templateFileLocation: "",
-	openDailyNoteOnStartup: false,
+	newFileLocation: "/Journal/YYYY/MM-mmmm/",
+	templateFileLocation: "/Templates/Daily Note Template.md",
+	openDailyNoteOnStartup: true,
 };
