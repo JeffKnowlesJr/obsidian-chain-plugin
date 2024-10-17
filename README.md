@@ -36,7 +36,11 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 obsidian-chain-plugin/
 ├── src/
 │ ├── main.ts
-│ ├── constants.ts
+│ ├── types/
+│ │ └── interfaces.ts
+│ ├── config/
+│ │ ├── constants.ts
+│ │ └── defaultSettings.ts
 │ ├── managers/
 │ │ ├── journalManager.ts
 │ │ ├── settingsManager.ts
@@ -44,11 +48,20 @@ obsidian-chain-plugin/
 │ │ ├── fileSystemManager.ts
 │ │ ├── commandManager.ts
 │ │ ├── ribbonManager.ts
-│ │ └── pluginManager.ts
+│ │ ├── pluginManager.ts
+│ │ └── syncManager.ts
 │ ├── services/
 │ │ └── logger.ts
-│ └── modals/
-│ └── futureEntryModal.ts
+│ ├── ui/
+│ │ ├── components/
+│ │ │ └── futureEntryModal.ts
+│ │ └── settingsTab.ts
+│ └── utils/
+│ └── errorHandler.ts
+├── tests/
+│ └── unit/
+│ └── managers/
+│ └── settingsManager.test.ts
 ├── manifest.json
 ├── package.json
 └── README.md
@@ -63,9 +76,11 @@ obsidian-chain-plugin/
 6. **Command Manager** (`src/managers/commandManager.ts`): Handles plugin commands and their execution within Obsidian
 7. **Ribbon Manager** (`src/managers/ribbonManager.ts`): Manages ribbon icons for quick access to plugin features
 8. **Plugin Manager** (`src/managers/pluginManager.ts`): Handles plugin reload functionality and integration with Obsidian's Daily Notes plugin
-9. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for creating future journal entries
-10. **Constants** (`src/constants.ts`): Defines shared values, types, and default settings for the plugin
+9. **Future Entry Modal** (`src/ui/components/futureEntryModal.ts`): Provides date picker functionality for creating future journal entries
+10. **Constants** (`src/config/constants.ts`): Defines shared values, types, and default settings for the plugin
 11. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking throughout the plugin
+12. **Sync Manager** (`src/managers/syncManager.ts`): Handles synchronization of settings between the Chain Plugin and the Daily Notes plugin
+13. **Error Handler** (`src/utils/errorHandler.ts`): Provides error handling functionality for improved stability and user feedback
 
 ## Installation and Usage
 

@@ -5,6 +5,10 @@ import { FileSystemManager } from "./managers/fileSystemManager";
 import { PluginManager } from "./managers/pluginManager";
 import { Plugin, Notice } from "obsidian";
 import { Logger } from "./services/logger";
+import { DEFAULT_SETTINGS } from "./config/defaultSettings";
+import { CONSTANTS } from "./config/constants";
+import { SyncManager } from "./managers/syncManager";
+import { errorHandler } from "./utils/errorHandler";
 
 export default class ChainPlugin extends Plugin {
 	journalManager: JournalManager;

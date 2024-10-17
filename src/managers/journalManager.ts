@@ -10,6 +10,7 @@ import { App, moment } from "obsidian";
 import { SettingsManager } from "./settingsManager";
 import { FileSystemManager } from "./fileSystemManager";
 import { EntryCreator } from "./entryCreator";
+import { CONSTANTS } from "../config/constants";
 
 export class JournalManager {
 	private entryCreator: EntryCreator;

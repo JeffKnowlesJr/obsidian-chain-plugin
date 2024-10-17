@@ -1,7 +1,12 @@
 import { Plugin } from "obsidian";
-import { SETTINGS, DEFAULT_SETTINGS, ChainPluginSettings } from "../constants";
+import {
+	SETTINGS,
+	DEFAULT_SETTINGS,
+	ChainPluginSettings,
+} from "../config/constants";
 import { Logger } from "../services/logger";
 import ChainPlugin from "../main";
+import { DEFAULT_SETTINGS } from "../config/defaultSettings";
 
 export class SettingsManager {
 	private settings: ChainPluginSettings;
