@@ -1,9 +1,27 @@
+/*
+SettingsManager.ts: Manages settings for the Chain Plugin
+
+This file defines the SettingsManager class, which is responsible for:
+1. Loading and saving plugin settings
+2. Providing methods to get and set individual settings
+3. Ensuring default settings are applied when necessary
+4. Updating related plugin settings when certain settings change
+5. Creating a default template file if it doesn't exist
+
+Key features:
+- Loads settings from Obsidian's data storage
+- Merges loaded settings with default settings
+- Saves settings back to Obsidian's data storage
+- Provides type-safe access to settings via getSetting and setSetting methods
+- Triggers updates to Daily Notes plugin settings when relevant settings change
+- Includes error handling and logging for robustness
+
+The SettingsManager is a crucial component of the Chain Plugin, ensuring
+consistent and reliable management of user preferences and plugin configuration.
+*/
+
 import { Plugin } from "obsidian";
-import {
-	SETTINGS,
-	DEFAULT_SETTINGS,
-	ChainPluginSettings,
-} from "../config/constants";
+import { SETTINGS, ChainPluginSettings } from "../config/constants";
 import { Logger } from "../services/logger";
 import ChainPlugin from "../main";
 import { DEFAULT_SETTINGS } from "../config/defaultSettings";

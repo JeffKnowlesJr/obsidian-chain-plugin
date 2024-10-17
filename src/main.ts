@@ -1,3 +1,22 @@
+/*
+Main Entry Point (src/main.ts):
+This file serves as the primary entry point for the Chain Plugin. It initializes all plugin components,
+manages the plugin lifecycle, and coordinates between different managers. The ChainPlugin class extends
+Obsidian's Plugin class and implements the core functionality:
+
+1. Imports necessary managers and services.
+2. Defines the ChainPlugin class with manager properties.
+3. Implements onload() method to initialize the plugin:
+   - Initializes all managers
+   - Checks for the Daily Notes plugin
+   - Handles startup tasks (e.g., opening daily note)
+   - Updates Daily Notes settings
+4. Implements onunload() method for plugin cleanup.
+5. Provides methods for initializing managers, handling startup, and updating settings.
+
+This structure allows for modular development and easy maintenance of the plugin's core functionalities.
+*/
+
 import { JournalManager } from "./managers/journalManager";
 import { SettingsManager } from "./managers/settingsManager";
 import { UIManager } from "./managers/uiManager";
@@ -5,10 +24,6 @@ import { FileSystemManager } from "./managers/fileSystemManager";
 import { PluginManager } from "./managers/pluginManager";
 import { Plugin, Notice } from "obsidian";
 import { Logger } from "./services/logger";
-import { DEFAULT_SETTINGS } from "./config/defaultSettings";
-import { CONSTANTS } from "./config/constants";
-import { SyncManager } from "./managers/syncManager";
-import { errorHandler } from "./utils/errorHandler";
 
 export default class ChainPlugin extends Plugin {
 	journalManager: JournalManager;
