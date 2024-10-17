@@ -15,7 +15,7 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 ## Current Implementation
 
 -   Create and open dated journal entries in the format "YYYY-MM-DD dddd.md"
--   Folder structure: Journal/YYYY/MM-MMMM/
+-   Folder structure: /Journal/YYYY/MM-mmmm/
 -   Customizable journal folder structure and entry templates
 -   Quick access via ribbon icons and command palette
 -   Settings management for user preferences
@@ -35,14 +35,17 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 obsidian-chain-plugin/
 ├── src/
 │ ├── main.ts
-│ ├── types.ts
 │ ├── constants.ts
 │ ├── managers/
 │ │ ├── journalManager.ts
 │ │ ├── settingsManager.ts
-│ │ └── uiManager.ts
-│ └── utils/
-│ └── dateUtils.ts
+│ │ ├── uiManager.ts
+│ │ ├── fileSystemManager.ts
+│ │ └── commandManager.ts
+│ ├── services/
+│ │ └── logger.ts
+│ └── modals/
+│ └── futureEntryModal.ts
 ├── manifest.json
 ├── package.json
 └── README.md
@@ -51,26 +54,20 @@ obsidian-chain-plugin/
 
 1. **Main Entry Point** (`src/main.ts`): Initializes plugin components and manages lifecycle
 2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration
-3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including the future entry creation
+3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including settings tab
 4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations and folder structure creation
-5. **Constants and Types** (`src/constants.ts`, `src/types.ts`): Define shared values and types
-6. **Utility Functions** (`src/utils/dateUtils.ts`): Provides helper functions for date handling and folder structure generation
-
-## Next Steps
-
-1. Enhance the automatic generation of monthly List, Log, and Tracker files
-2. Improve folder structure creation logic
-3. Enhance error handling and user feedback
-4. Implement additional customization options for templates and folder structure
-5. Add integration with Obsidian's existing search functionality for easier journal entry retrieval
+5. **File System Manager** (`src/managers/fileSystemManager.ts`): Manages file and folder operations
+6. **Command Manager** (`src/managers/commandManager.ts`): Handles plugin commands and their execution
+7. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for future entries
+8. **Constants** (`src/constants.ts`): Defines shared values and types
+9. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking
 
 ## Installation and Usage
 
-1. Download the latest release
-2. Extract to Obsidian plugins folder
-3. Enable plugin in Obsidian settings
-4. Use ribbon icon or command palette to create/open entries
-5. Configure settings in Obsidian settings panel
+1. Install the plugin from Obsidian's Community Plugins browser
+2. Enable the plugin in Obsidian settings
+3. Use ribbon icon or command palette to create/open entries
+4. Configure settings in the plugin's settings tab
 
 ## Development and Contributing
 
