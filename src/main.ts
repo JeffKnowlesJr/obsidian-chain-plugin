@@ -47,7 +47,6 @@ export default class ChainPlugin extends Plugin {
 
 	private async initializeManagers() {
 		this.settingsManager = new SettingsManager(this);
-		await this.settingsManager.loadSettings();
 
 		this.fileSystemManager = new FileSystemManager(this.app);
 		this.journalManager = new JournalManager(

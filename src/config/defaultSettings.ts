@@ -1,14 +1,14 @@
 // Define default settings here
 
 import { ChainPluginSettings } from "../types/interfaces";
+import { DEFAULT_TEMPLATE } from "./defaultTemplate";
 
 export const DEFAULT_SETTINGS: ChainPluginSettings = {
 	journalFolder: "Journal",
-	defaultTemplate:
-		"## Log\n\n### Ideas\n- \n### To Do\n- [ ] \n### Contacts\n- [ ] \n### Events\n- \n\n****\n## Routine Checklist\n\n- [ ] **Daily**\n    - [ ] Morning",
+	defaultTemplate: DEFAULT_TEMPLATE,
 	dailyNotesFolderOverride: "",
 	dateFormat: "YYYY-MM-DD dddd",
-	newFileLocation: "/Journal/YYYY/MM-mmmm/",
+	newFileLocation: "/Journal/{{date:YYYY}}/{{date:MM-MMMM}}/",
 	templateFileLocation: "/Templates/Daily Note Template.md",
 	openDailyNoteOnStartup: true,
 };

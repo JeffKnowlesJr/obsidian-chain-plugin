@@ -3,10 +3,6 @@ SettingsManager.ts: Manages settings for the Chain Plugin
 
 This file defines the SettingsManager class, which is responsible for:
 1. Loading and saving plugin settings
-2. Providing methods to get and set individual settings
-3. Ensuring default settings are applied when necessary
-4. Updating related plugin settings when certain settings change
-5. Creating a default template file if it doesn't exist
 
 Key features:
 - Loads settings from Obsidian's data storage
@@ -25,6 +21,7 @@ import { SETTINGS, ChainPluginSettings } from "../config/constants";
 import { Logger } from "../services/logger";
 import ChainPlugin from "../main";
 import { DEFAULT_SETTINGS } from "../config/defaultSettings";
+import { DEFAULT_TEMPLATE } from "../config/defaultTemplate";
 
 export class SettingsManager {
 	private settings: ChainPluginSettings;
@@ -36,25 +33,36 @@ export class SettingsManager {
 	async loadSettings() {
 		try {
 			const loadedData = await this.plugin.loadData();
+			Logger.debug(`Loaded data: ${JSON.stringify(loadedData, null, 2)}`);
+
 			if (loadedData && typeof loadedData === "object") {
 				this.settings = {
 					...DEFAULT_SETTINGS,
 					...loadedData,
 				};
+				Logger.debug(
+					`Merged settings: ${JSON.stringify(this.settings, null, 2)}`
+				);
 			} else {
-				console.warn(
+				Logger.warn(
 					"Invalid or empty plugin data, using default settings"
 				);
 				this.settings = DEFAULT_SETTINGS;
 			}
 		} catch (error) {
-			console.error("Failed to load plugin settings:", error);
-			Logger.error(error as Error);
+			Logger.error(`Failed to load plugin settings: ${error}`);
 			this.settings = DEFAULT_SETTINGS;
 		}
 
 		// Ensure the settings file is properly saved after loading
 		await this.saveSettings();
+		Logger.debug(
+			`Final settings after save: ${JSON.stringify(
+				this.settings,
+				null,
+				2
+			)}`
+		);
 	}
 
 	async saveSettings() {
@@ -70,7 +78,9 @@ export class SettingsManager {
 	}
 
 	getSetting(key: keyof ChainPluginSettings): any {
-		return this.settings[key];
+		const value = this.settings[key];
+		Logger.debug(`Getting setting ${key}: ${value}`);
+		return value;
 	}
 
 	async setSetting(key: keyof ChainPluginSettings, value: any) {
@@ -100,69 +110,9 @@ export class SettingsManager {
 			);
 			await this.fileSystemManager.createDirectory(templateDir);
 
-			const templateContent = `****
-## Log
-
-### Ideas
--
-### To Do
-- [ ]
-### Contacts
-- [ ]
-### Events
--
-
-****
-## Routine Checklist
-
-- [[Jeff + Tai]]
-- [ ] **Daily**
-    - [ ] Morning
-        - [ ] Make Bed 🛏️ 
-        - [ ] Brush Teeth 🦷
-        - [ ] Get Dressed 👖
-        - [ ] Morning Walk 🐕🚶🏻‍♂️
-        - [ ] Feed Gus 🐶
-        - [ ] Breakfast ☕️
-        - [ ] Take Meds 💊
-        - [ ] Gus Meds 🦴
-        - [ ] Sync Weight ⚖️
-        - [ ] Bio 💩 
-        - [ ] Brush Teeth 🦷
-    - [ ] Tech
-        - [ ] Wear Watch ⌚️
-        - [ ] Manage [Calendar](https://calendar.google.com/calendar/u/0?cid=amVmZmtub3dsZXNqckBnbWFpbC5jb20) 📆 
-        - [ ] Check [Mail](https://mail.google.com/mail/u/0/) ✉️
-        - [ ] Check [[_Journal/y_2024/October/October Log|October Log]] 🗓️ 
-        - [ ] Check [[_Journal/y_2024/October/October List|October List]] ✅
-        - [ ] Check [[October Time]] 🕒
-        - [ ] Check [Coach Accountable](https://www.coachaccountable.com/app) 👨‍💼
-        - [ ] Check [Trello](https://trello.com/w/userworkspace28736609/home) 📥
-    - [ ] Afternoon
-        - [ ] Lunch
-        - [ ] Dental Hygeine
-        - [ ] Walk Gus
-        - [ ] Freelance Work
-        - [ ] Learning
-    - [ ] Evening
-        - [ ] Feed Gus
-        - [ ] Standing Desk
-        - [ ] Dinner
-        - [ ] Reading
-        - [ ] Prayer / Meditation
-        - [ ] Brush Teeth
-    - [ ] Consistency (30 Minutes)
-        - [ ] Guitar
-        - [ ] Development
-    - [ ] Work out
-        - [ ] Running
-        - [ ] Stretching
-        - [ ] Lifting
-****`;
-
 			await this.fileSystemManager.createFile(
 				templatePath,
-				templateContent
+				DEFAULT_TEMPLATE
 			);
 			Logger.log("Daily Notes Template created");
 		}
