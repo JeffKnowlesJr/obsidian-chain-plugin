@@ -12,19 +12,9 @@ export class FileSystemManager {
 
 		for (const folder of folders) {
 			currentPath += folder + "/";
-			try {
-				const folderExists = await this.app.vault.adapter.exists(
-					currentPath
-				);
-				if (!folderExists) {
-					await this.app.vault.createFolder(currentPath);
-				}
-			} catch (error) {
-				throw new Error(
-					`Failed to create folder structure: ${
-						(error as Error).message
-					}`
-				);
+			if (!(await this.app.vault.adapter.exists(currentPath))) {
+				await this.app.vault.createFolder(currentPath);
+				Logger.log(`Created folder: ${currentPath}`);
 			}
 		}
 	}

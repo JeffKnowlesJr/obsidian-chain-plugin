@@ -19,6 +19,7 @@ import moment from "moment";
 import { Plugin } from "obsidian";
 import { RibbonManager } from "./ribbonManager";
 import { CommandManager } from "./commandManager";
+import { FutureEntryModal } from "../modals/futureEntryModal";
 
 export class UIManager {
 	private ribbonManager: RibbonManager;
@@ -31,6 +32,8 @@ export class UIManager {
 
 	initialize() {
 		this.ribbonManager.addIcons();
+		this.addIcons();
+		this.addRibbonIcons();
 		this.commandManager.addCommands();
 		this.addSettingTab();
 	}
@@ -38,6 +41,22 @@ export class UIManager {
 	private addSettingTab() {
 		this.plugin.addSettingTab(
 			new ChainPluginSettingTab(this.plugin.app, this.plugin)
+		);
+	}
+
+	addIcons() {
+		addIcon("chain-journal", ICON_DATA);
+	}
+
+	addRibbonIcons() {
+		this.plugin.addRibbonIcon(
+			"chain-journal",
+			"Create Future Entry",
+			(evt: MouseEvent) => {
+				new FutureEntryModal(this.plugin.app, (date) => {
+					this.plugin.journalManager.createOrUpdateDailyNote(date);
+				}).open();
+			}
 		);
 	}
 }
@@ -57,6 +76,7 @@ class ChainPluginSettingTab extends PluginSettingTab {
 		this.addTemplateFileLocationSetting(containerEl);
 		this.addOpenDailyNoteOnStartupSetting(containerEl);
 		this.addAllTemplateSettings(containerEl);
+		this.addDailyNotesFolderOverrideSetting(containerEl);
 	}
 
 	private addJournalFolderSetting(containerEl: HTMLElement) {

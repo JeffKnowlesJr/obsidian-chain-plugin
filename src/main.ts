@@ -20,28 +20,45 @@ export default class ChainPlugin extends Plugin {
 	fileSystemManager: FileSystemManager;
 
 	async onload() {
-		console.log("Chain Plugin is loading...");
-		Logger.log("Chain Plugin onload method called");
+		Logger.log("Chain Plugin is loading...");
 
-		this.initializeManagers();
-		await this.loadSettings();
-		await this.updateDailyNotesSettings();
-		this.checkDailyNotesPlugin();
-		this.initializeUI();
-		await this.handleStartup();
+		const dailyNotesPlugin = (this.app as any).internalPlugins.plugins[
+			"daily-notes"
+		];
+		if (!dailyNotesPlugin || !dailyNotesPlugin.enabled) {
+			Logger.warn(
+				"Daily Notes plugin is not enabled. Some features may not work as expected."
+			);
+			new Notice(
+				"The Daily Notes core plugin is recommended for the Chain Plugin. Please enable it in the core plugins settings."
+			);
+		} else {
+			Logger.log("Daily Notes plugin is enabled and available.");
+		}
 
-		console.log("Chain Plugin loaded successfully");
-		Logger.log("Chain Plugin loaded successfully");
-	}
-
-	private initializeManagers() {
 		this.settingsManager = new SettingsManager(this);
+		await this.settingsManager.loadSettings();
+		Logger.log("Settings loaded successfully.");
+
 		this.fileSystemManager = new FileSystemManager(this.app);
+		Logger.log("File System Manager initialized.");
+
 		this.journalManager = new JournalManager(
 			this.app,
 			this.settingsManager,
 			this.fileSystemManager
 		);
+		Logger.log("Journal Manager initialized.");
+
+		this.uiManager = new UIManager(this);
+		this.uiManager.initialize();
+		Logger.log("UI Manager initialized and UI elements added.");
+
+		Logger.log("Chain Plugin loaded successfully");
+	}
+
+	onunload() {
+		Logger.log("Chain Plugin unloaded");
 	}
 
 	private async loadSettings() {
@@ -80,8 +97,10 @@ export default class ChainPlugin extends Plugin {
 	}
 
 	public async updateDailyNotesSettings() {
-		const dailyNotesPlugin =
-			this.app.internalPlugins.plugins["daily-notes"];
+		Logger.log("Updating Daily Notes settings...");
+		const dailyNotesPlugin = (this.app as any).internalPlugins.plugins[
+			"daily-notes"
+		];
 		if (dailyNotesPlugin && dailyNotesPlugin.enabled) {
 			const dailyNotesInstance = dailyNotesPlugin.instance;
 			if (dailyNotesInstance && dailyNotesInstance.options) {
@@ -97,6 +116,13 @@ export default class ChainPlugin extends Plugin {
 					this.settingsManager.getSetting("templateFileLocation") ||
 					"/Templates/Daily Note Template.md";
 
+				Logger.log(
+					`Current Daily Notes settings: format=${currentFormat}, folder=${currentFolder}, template=${currentTemplate}`
+				);
+				Logger.log(
+					`New Daily Notes settings: format=${newFormat}, folder=${newFolder}, template=${newTemplate}`
+				);
+
 				if (
 					currentFormat !== newFormat ||
 					currentFolder !== newFolder ||
@@ -106,9 +132,23 @@ export default class ChainPlugin extends Plugin {
 					dailyNotesInstance.options.folder = newFolder;
 					dailyNotesInstance.options.template = newTemplate;
 					await dailyNotesPlugin.saveData(dailyNotesInstance.options);
-					Logger.log("Daily Notes plugin settings updated");
+					Logger.log(
+						"Daily Notes plugin settings updated successfully"
+					);
+				} else {
+					Logger.log(
+						"No changes needed for Daily Notes plugin settings"
+					);
 				}
+			} else {
+				Logger.warn(
+					"Daily Notes plugin instance or options not available"
+				);
 			}
+		} else {
+			Logger.warn(
+				"Daily Notes plugin is not enabled, skipping settings update"
+			);
 		}
 	}
 

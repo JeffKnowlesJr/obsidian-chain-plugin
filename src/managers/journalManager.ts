@@ -21,18 +21,19 @@ export class JournalManager {
 	async createOrUpdateDailyNote(date: moment.Moment = moment()) {
 		const baseFolder =
 			this.settingsManager.getSetting("journalFolder") || "Journal";
-		const yearFolder = date.format("YYYY");
-		const monthFolder = date.format("MM-MMMM");
+		const newFileLocation =
+			this.settingsManager.getSetting("newFileLocation");
+
+		const folderPath = `${baseFolder}/${date.format("YYYY")}/${date.format(
+			"MM-MMMM"
+		)}`;
 		const fileName = `${date.format(
 			this.settingsManager.getSetting("dateFormat")
 		)}.md`;
-		const folderPath = `${baseFolder}/${yearFolder}/${monthFolder}`;
 		const filePath = `${folderPath}/${fileName}`;
 
 		try {
-			// Ensure the folder structure exists
 			await this.fileSystemManager.ensureFolderStructure(folderPath);
-
 			let file = this.app.vault.getAbstractFileByPath(filePath);
 
 			if (!file) {
@@ -44,20 +45,16 @@ export class JournalManager {
 					filePath,
 					finalContent
 				);
-				Logger.log(`Created new daily note: ${filePath}`);
-			} else {
-				Logger.log(`Daily note already exists: ${filePath}`);
 			}
 
 			if (file instanceof TFile) {
 				await this.app.workspace.getLeaf(false).openFile(file);
-				Logger.log(`Opened daily note: ${filePath}`);
 			} else {
 				throw new Error("Created file is not a TFile");
 			}
 		} catch (error) {
 			Logger.error(`Error in createOrUpdateDailyNote: ${error}`);
-			throw error; // Propagate the error to be handled in handleStartup
+			new Notice(`Failed to create or open daily note: ${error.message}`);
 		}
 	}
 
