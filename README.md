@@ -10,17 +10,16 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 2. Customizable entry templates for daily and monthly entries
 3. Quick access via ribbon icons and command palette
 4. Future entry creation with automatic folder structure generation
-5. Monthly List, Log, and Tracker files
-6. Plugin reload functionality for easy development and troubleshooting
+5. Plugin reload functionality for easy development and troubleshooting
 
 ## Current Implementation
 
 -   Create and open dated journal entries in the format "YYYY-MM-DD dddd.md"
+-   Folder structure: Journal/YYYY/MM-MMMM/
 -   Customizable journal folder structure and entry templates
 -   Quick access via ribbon icons and command palette
 -   Settings management for user preferences
 -   Automatic creation of yearly and monthly folders
--   Generation of monthly List, Log, and Tracker files
 -   Future entry creation with date picker functionality
 -   Plugin reload functionality without closing Obsidian
 
@@ -29,7 +28,7 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 -   **Plugin Structure**: Utilizes Obsidian's plugin API, implemented in TypeScript
 -   **Data Storage**: Leverages Obsidian's file-based system, storing entries as markdown files within a structured folder hierarchy
 -   **User Interface**: Custom views using Obsidian's UI components, including ribbon icons for quick access and a date picker for future entries
--   **Logging**: Comprehensive logging system for easier debugging and troubleshooting
+-   **Error Handling**: Comprehensive error handling for improved stability and user feedback
 
 ## Project Structure
 
