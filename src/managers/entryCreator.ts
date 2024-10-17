@@ -32,41 +32,50 @@ export class EntryCreator {
 		const { folderPath, filePath } = this.getFilePaths(date);
 
 		try {
-			// Ensure the folder structure exists
-			Logger.debug(`Checking folder structure: ${folderPath}`);
-			const folderExists = await this.fileSystemManager.folderExists(
-				folderPath
-			);
-			if (!folderExists) {
-				Logger.info(
-					`Folder structure not found. Creating: ${folderPath}`
-				);
-				await this.fileSystemManager.ensureFolderStructure(folderPath);
-			} else {
-				Logger.debug(`Folder structure already exists: ${folderPath}`);
-			}
-
-			// Check if the file already exists, create if it doesn't
-			let file = this.app.vault.getAbstractFileByPath(filePath);
-			if (!file) {
-				Logger.info(`File not found. Creating new file: ${filePath}`);
-				file = await this.createNewFile(filePath, date);
-			} else if (file instanceof TFile) {
-				Logger.info(`File already exists: ${filePath}`);
-			} else {
-				Logger.info(`Unexpected file type at ${filePath}`);
-				return;
-			}
-
-			// Open the file in the main pane
-			if (file instanceof TFile) {
-				Logger.debug(`Opening file: ${filePath}`);
-				await this.fileSystemManager.openFileInMainPane(file);
-			} else {
-				Logger.info("Created file is not a TFile");
-			}
+			await this.ensureFolderStructure(folderPath);
+			const file = await this.getOrCreateFile(filePath, date);
+			await this.openFileInMainPane(file);
 		} catch (error) {
 			Logger.info(`Note creation info: ${error.message}`);
+		}
+	}
+
+	private async ensureFolderStructure(folderPath: string): Promise<void> {
+		Logger.debug(`Checking folder structure: ${folderPath}`);
+		const folderExists = await this.fileSystemManager.folderExists(
+			folderPath
+		);
+		if (!folderExists) {
+			Logger.info(`Folder structure not found. Creating: ${folderPath}`);
+			await this.fileSystemManager.ensureFolderStructure(folderPath);
+		} else {
+			Logger.debug(`Folder structure already exists: ${folderPath}`);
+		}
+	}
+
+	private async getOrCreateFile(
+		filePath: string,
+		date: moment.Moment
+	): Promise<TFile | null> {
+		let file = this.app.vault.getAbstractFileByPath(filePath);
+		if (!file) {
+			Logger.info(`File not found. Creating new file: ${filePath}`);
+			file = await this.createNewFile(filePath, date);
+		} else if (file instanceof TFile) {
+			Logger.info(`File already exists: ${filePath}`);
+		} else {
+			Logger.info(`Unexpected file type at ${filePath}`);
+			return null;
+		}
+		return file instanceof TFile ? file : null;
+	}
+
+	private async openFileInMainPane(file: TFile | null): Promise<void> {
+		if (file instanceof TFile) {
+			Logger.debug(`Opening file: ${file.path}`);
+			await this.fileSystemManager.openFileInMainPane(file);
+		} else {
+			Logger.info("Created file is not a TFile");
 		}
 	}
 
