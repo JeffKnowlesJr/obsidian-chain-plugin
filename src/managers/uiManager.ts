@@ -19,7 +19,7 @@ import moment from "moment";
 import { Plugin } from "obsidian";
 import { RibbonManager } from "./ribbonManager";
 import { CommandManager } from "./commandManager";
-import { FutureEntryModal } from "../ui/components/futureEntryModal";
+import { FutureEntryModal } from "../modals/futureEntryModal";
 import { SettingsTabManager } from "./settingsTabManager";
 import { SettingsTab } from "../ui/settingsTab";
 

@@ -49,9 +49,11 @@ obsidian-chain-plugin/
 │ │ ├── commandManager.ts
 │ │ ├── ribbonManager.ts
 │ │ ├── pluginManager.ts
-│ │ └── syncManager.ts
+│ │ ├── syncManager.ts
+│ │ └── templateManager.ts
 │ ├── services/
-│ │ └── logger.ts
+│ │ ├── logger.ts
+│ │ └── eventBus.ts
 │ ├── ui/
 │ │ ├── components/
 │ │ │ └── futureEntryModal.ts
@@ -81,6 +83,8 @@ obsidian-chain-plugin/
 11. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking throughout the plugin
 12. **Sync Manager** (`src/managers/syncManager.ts`): Handles synchronization of settings between the Chain Plugin and the Daily Notes plugin
 13. **Error Handler** (`src/utils/errorHandler.ts`): Provides error handling functionality for improved stability and user feedback
+14. **Event Bus** (`src/services/eventBus.ts`): Implements an event bus for loose coupling between plugin components
+15. **Template Manager** (`src/managers/templateManager.ts`): Handles the retrieval and processing of note templates
 
 ## Installation and Usage
 
@@ -111,10 +115,11 @@ If you find this plugin helpful, consider supporting the development on [Patreon
 
 ## Daily Notes Plugin Integration
 
-The Chain Plugin seamlessly integrates with Obsidian's core Daily Notes plugin to ensure consistent settings and behavior. This integration includes:
+The Chain Plugin seamlessly integrates with Obsidian's core Daily Notes plugin to ensure consistent settings and behavior. This integration is managed by the SyncManager, which handles:
 
 -   Synchronization of date format settings
 -   Matching folder structure for daily notes
 -   Consistent use of templates for daily entries
+-   Automatic updates to Daily Notes plugin settings when Chain Plugin settings change
 
 Users can manage their daily journaling workflow using either plugin, with settings automatically kept in sync for a smooth experience.
