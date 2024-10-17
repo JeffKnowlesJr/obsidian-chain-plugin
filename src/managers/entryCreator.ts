@@ -9,6 +9,7 @@ import {
 	getDayFileName,
 } from "../utils/dateUtils";
 
+// EntryCreator class handles the creation and updating of daily notes
 export class EntryCreator {
 	private templateManager: TemplateManager;
 
@@ -21,6 +22,7 @@ export class EntryCreator {
 		Logger.info("EntryCreator initialized");
 	}
 
+	// Creates or updates a daily note for the given date (or today if not specified)
 	async createOrUpdateDailyNote(date: moment.Moment = moment()) {
 		Logger.info(
 			`Creating or updating daily note for date: ${date.format(
@@ -30,6 +32,7 @@ export class EntryCreator {
 		const { folderPath, filePath } = this.getFilePaths(date);
 
 		try {
+			// Ensure the folder structure exists
 			Logger.debug(`Checking folder structure: ${folderPath}`);
 			const folderExists = await this.fileSystemManager.folderExists(
 				folderPath
@@ -43,6 +46,7 @@ export class EntryCreator {
 				Logger.debug(`Folder structure already exists: ${folderPath}`);
 			}
 
+			// Check if the file already exists, create if it doesn't
 			let file = this.app.vault.getAbstractFileByPath(filePath);
 			if (!file) {
 				Logger.info(`File not found. Creating new file: ${filePath}`);
@@ -54,6 +58,7 @@ export class EntryCreator {
 				return;
 			}
 
+			// Open the file in the main pane
 			if (file instanceof TFile) {
 				Logger.debug(`Opening file: ${filePath}`);
 				await this.fileSystemManager.openFileInMainPane(file);
@@ -65,6 +70,7 @@ export class EntryCreator {
 		}
 	}
 
+	// Generates the folder and file paths for the given date
 	private getFilePaths(date: moment.Moment) {
 		Logger.debug(
 			`Getting file paths for date: ${date.format("YYYY-MM-DD")}`
@@ -76,6 +82,8 @@ export class EntryCreator {
 			"/{{journalFolder}}/{{date:YYYY}}/{{date:MM-MMMM}}/";
 		Logger.debug(`newFileLocation setting: ${newFileLocation}`);
 		Logger.debug(`baseFolder setting: ${baseFolder}`);
+
+		// Replace placeholders in the file location string
 		const folderPath = newFileLocation
 			.replace(/\{\{journalFolder\}\}/g, baseFolder)
 			.replace(/\{\{date:([^}]+)\}\}/g, (match, p1) => {
@@ -96,6 +104,7 @@ export class EntryCreator {
 		return { folderPath, filePath };
 	}
 
+	// Creates a new file with the appropriate template content
 	private async createNewFile(filePath: string, date: moment.Moment) {
 		Logger.info(`Creating new file: ${filePath}`);
 		const templateContent = await this.templateManager.getTemplateContent();
@@ -106,5 +115,5 @@ export class EntryCreator {
 		return await this.fileSystemManager.createFile(filePath, finalContent);
 	}
 
-	// ... (include getTemplateContent, replaceDatePlaceholder, and getDefaultTemplate methods)
+	// ... (other methods like getTemplateContent, replaceDatePlaceholder, and getDefaultTemplate)
 }
