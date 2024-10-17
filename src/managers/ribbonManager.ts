@@ -1,7 +1,7 @@
 import { addIcon } from "obsidian";
 import ChainPlugin from "../main";
 import { ICON_DATA } from "../constants";
-import { FutureEntryModal } from "./futureEntryModal";
+import { FutureEntryModal } from "../modals/futureEntryModal";
 import moment from "moment";
 
 export class RibbonManager {

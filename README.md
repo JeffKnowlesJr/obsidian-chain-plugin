@@ -11,6 +11,7 @@ The Obsidian Chain Plugin is an advanced journaling system for Obsidian, enhanci
 3. Quick access via ribbon icons and command palette
 4. Future entry creation with automatic folder structure generation
 5. Plugin reload functionality for easy development and troubleshooting
+6. Seamless integration with Obsidian's Daily Notes plugin
 
 ## Current Implementation
 
@@ -41,7 +42,9 @@ obsidian-chain-plugin/
 │ │ ├── settingsManager.ts
 │ │ ├── uiManager.ts
 │ │ ├── fileSystemManager.ts
-│ │ └── commandManager.ts
+│ │ ├── commandManager.ts
+│ │ ├── ribbonManager.ts
+│ │ └── pluginManager.ts
 │ ├── services/
 │ │ └── logger.ts
 │ └── modals/
@@ -58,9 +61,11 @@ obsidian-chain-plugin/
 4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations and folder structure creation
 5. **File System Manager** (`src/managers/fileSystemManager.ts`): Manages file and folder operations
 6. **Command Manager** (`src/managers/commandManager.ts`): Handles plugin commands and their execution
-7. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for future entries
-8. **Constants** (`src/constants.ts`): Defines shared values and types
-9. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking
+7. **Ribbon Manager** (`src/managers/ribbonManager.ts`): Manages ribbon icons for quick access
+8. **Plugin Manager** (`src/managers/pluginManager.ts`): Handles plugin reload functionality and Daily Notes plugin integration
+9. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for future entries
+10. **Constants** (`src/constants.ts`): Defines shared values and types
+11. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking
 
 ## Installation and Usage
 
@@ -76,3 +81,15 @@ Contributions are welcome. Please refer to the GitHub repository for guidelines.
 ## License
 
 This project is licensed under the MIT License.
+
+## Version
+
+Current version: 1.1.0 (as of last update)
+
+## Author
+
+Created by Jeff's Link (https://jeffs.link)
+
+## Support
+
+If you find this plugin helpful, consider supporting the development on [Patreon](https://www.patreon.com/jeffslink).
