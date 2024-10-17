@@ -6,7 +6,7 @@ import ChainPlugin from "../main";
 export class SettingsManager {
 	private settings: ChainPluginSettings;
 
-	constructor(private plugin: Plugin) {
+	constructor(private plugin: ChainPlugin) {
 		this.settings = DEFAULT_SETTINGS;
 	}
 
@@ -40,7 +40,6 @@ export class SettingsManager {
 		} catch (error) {
 			console.error("Failed to save plugin settings:", error);
 			Logger.error(error as Error);
-			// Optionally, you can show a notice to the user
 			new Notice(
 				"Failed to save Chain Plugin settings. Check console for details."
 			);
@@ -60,7 +59,7 @@ export class SettingsManager {
 				key === "newFileLocation" ||
 				key === "templateFileLocation"
 			) {
-				await (this.plugin as ChainPlugin).updateDailyNotesSettings();
+				await this.plugin.updateDailyNotesSettings();
 			}
 		}
 	}

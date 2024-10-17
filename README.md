@@ -55,17 +55,17 @@ obsidian-chain-plugin/
 
 ## Core Components
 
-1. **Main Entry Point** (`src/main.ts`): Initializes plugin components and manages lifecycle
-2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration
-3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including settings tab
-4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations and folder structure creation
-5. **File System Manager** (`src/managers/fileSystemManager.ts`): Manages file and folder operations
-6. **Command Manager** (`src/managers/commandManager.ts`): Handles plugin commands and their execution
-7. **Ribbon Manager** (`src/managers/ribbonManager.ts`): Manages ribbon icons for quick access
-8. **Plugin Manager** (`src/managers/pluginManager.ts`): Handles plugin reload functionality and Daily Notes plugin integration
-9. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for future entries
-10. **Constants** (`src/constants.ts`): Defines shared values and types
-11. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking
+1. **Main Entry Point** (`src/main.ts`): Initializes plugin components, manages lifecycle, and coordinates between different managers
+2. **Settings Manager** (`src/managers/settingsManager.ts`): Handles plugin configuration, loading, and saving of user preferences
+3. **UI Manager** (`src/managers/uiManager.ts`): Manages user interface elements, including settings tab, ribbon icons, and commands
+4. **Journal Manager** (`src/managers/journalManager.ts`): Handles journal entry operations, folder structure creation, and daily note management
+5. **File System Manager** (`src/managers/fileSystemManager.ts`): Manages file and folder operations within Obsidian's file system
+6. **Command Manager** (`src/managers/commandManager.ts`): Handles plugin commands and their execution within Obsidian
+7. **Ribbon Manager** (`src/managers/ribbonManager.ts`): Manages ribbon icons for quick access to plugin features
+8. **Plugin Manager** (`src/managers/pluginManager.ts`): Handles plugin reload functionality and integration with Obsidian's Daily Notes plugin
+9. **Future Entry Modal** (`src/modals/futureEntryModal.ts`): Provides date picker functionality for creating future journal entries
+10. **Constants** (`src/constants.ts`): Defines shared values, types, and default settings for the plugin
+11. **Logger** (`src/services/logger.ts`): Provides logging functionality for debugging and error tracking throughout the plugin
 
 ## Installation and Usage
 
@@ -84,7 +84,7 @@ This project is licensed under the MIT License.
 
 ## Version
 
-Current version: 1.1.0 (as of last update)
+Current version: 1.2.0 (as of last update)
 
 ## Author
 
@@ -93,3 +93,13 @@ Created by Jeff's Link (https://jeffs.link)
 ## Support
 
 If you find this plugin helpful, consider supporting the development on [Patreon](https://www.patreon.com/jeffslink).
+
+## Daily Notes Plugin Integration
+
+The Chain Plugin seamlessly integrates with Obsidian's core Daily Notes plugin to ensure consistent settings and behavior. This integration includes:
+
+-   Synchronization of date format settings
+-   Matching folder structure for daily notes
+-   Consistent use of templates for daily entries
+
+Users can manage their daily journaling workflow using either plugin, with settings automatically kept in sync for a smooth experience.

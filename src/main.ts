@@ -18,6 +18,7 @@ export default class ChainPlugin extends Plugin {
 		await this.initializeManagers();
 		this.pluginManager.checkDailyNotesPlugin();
 		await this.handleStartup();
+		await this.updateDailyNotesSettings();
 		Logger.log("Chain Plugin loaded successfully");
 	}
 
@@ -36,10 +37,10 @@ export default class ChainPlugin extends Plugin {
 			this.fileSystemManager
 		);
 
+		this.pluginManager = new PluginManager(this, this.settingsManager);
+
 		this.uiManager = new UIManager(this);
 		this.uiManager.initialize();
-
-		this.pluginManager = new PluginManager(this, this.settingsManager);
 
 		Logger.log("All managers initialized successfully.");
 	}
